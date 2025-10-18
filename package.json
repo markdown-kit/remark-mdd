@@ -1,0 +1,62 @@
+{
+  "name": "@entro314labs/remark-mdd",
+  "version": "0.1.0",
+  "description": "Remark plugins and validation for MDD (Markdown Document) format - semantic document layer for professional business documents",
+  "main": "index.js",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./plugins/document-structure": "./plugins/remark-mdd-document-structure.js",
+    "./plugins/text-formatting": "./plugins/remark-mdd-text-formatting.js",
+    "./plugins/mdx-conditional": "./plugins/remark-mdx-conditional.js",
+    "./validator": "./lib/validator.js",
+    "./plugin-validator": "./lib/plugin-validator.js",
+    "./schema": "./schema/mdd-document.schema.json",
+    "./schema/requirements": "./schema/document-type-requirements.json",
+    "./types": "./types/mdd.d.ts"
+  },
+  "files": [
+    "plugins/**/*.js",
+    "lib/**/*.js",
+    "schema/**/*.json",
+    "types/**/*.d.ts",
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "remark",
+    "remark-plugin",
+    "markdown",
+    "mdd",
+    "semantic-markdown",
+    "business-documents",
+    "professional-documents",
+    "document-validation",
+    "schema-validation",
+    "json-schema",
+    "typescript",
+    "document-structure",
+    "unified",
+    "mdast"
+  ],
+  "author": "Dominikos Pritis <dominik@example.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/entro314-labs/remark-mdd.git"
+  },
+  "bugs": {
+    "url": "https://github.com/entro314-labs/remark-mdd/issues"
+  },
+  "homepage": "https://github.com/entro314-labs/remark-mdd#readme",
+  "dependencies": {
+    "unist-util-visit": "^5.0.0"
+  },
+  "peerDependencies": {
+    "remark": "^15.0.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

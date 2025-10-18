@@ -1,0 +1,717 @@
+{
+  "$schema": "./mdd-document.schema.json#/definitions/documentTypeRequirements",
+  "description": "Required and recommended elements for each MDD document type",
+  "version": "0.1.0",
+
+  "documentTypes": {
+    "business-letter": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": ["contact-info"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": ["author", "recipient", "subject"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1,
+        "signature-block": 1
+      }
+    },
+
+    "invoice": {
+      "requiredDirectives": ["letterhead", "header"],
+      "recommendedDirectives": ["footer", "contact-info"],
+      "requiredMetadata": ["title", "date", "document-type", "invoice-number"],
+      "recommendedMetadata": [
+        "author",
+        "recipient",
+        "payment-terms",
+        "due-date",
+        "total-amount",
+        "purchase-order"
+      ],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1,
+        "header": 1,
+        "footer": 1
+      }
+    },
+
+    "proposal": {
+      "requiredDirectives": ["letterhead"],
+      "recommendedDirectives": ["header", "footer", "signature-block"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": [
+        "author",
+        "recipient",
+        "version",
+        "status",
+        "reference-number"
+      ],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "contract": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": ["header", "footer"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "effective-date"
+      ],
+      "recommendedMetadata": [
+        "jurisdiction",
+        "expiration-date",
+        "reference-number",
+        "version"
+      ],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "agreement": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": ["header", "footer"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "effective-date"
+      ],
+      "recommendedMetadata": [
+        "jurisdiction",
+        "expiration-date",
+        "reference-number"
+      ],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "memorandum": {
+      "requiredDirectives": [],
+      "recommendedDirectives": ["header", "footer"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": ["author", "recipient", "subject", "reference-number"],
+      "maxDirectiveOccurrences": {
+        "header": 1,
+        "footer": 1
+      }
+    },
+
+    "memo": {
+      "requiredDirectives": [],
+      "recommendedDirectives": ["header"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": ["author", "recipient", "subject"],
+      "maxDirectiveOccurrences": {
+        "header": 1
+      }
+    },
+
+    "report": {
+      "requiredDirectives": [],
+      "recommendedDirectives": ["letterhead", "header", "footer"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": ["author", "version", "status"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1,
+        "header": 1,
+        "footer": 1
+      }
+    },
+
+    "legal-notice": {
+      "requiredDirectives": ["letterhead"],
+      "recommendedDirectives": ["signature-block"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": ["jurisdiction", "reference-number", "effective-date"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "legal-guide": {
+      "requiredDirectives": [],
+      "recommendedDirectives": ["letterhead", "header", "footer"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": ["author", "jurisdiction", "version"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "terms-of-service": {
+      "requiredDirectives": [],
+      "recommendedDirectives": ["letterhead", "footer"],
+      "requiredMetadata": ["title", "date", "document-type", "effective-date"],
+      "recommendedMetadata": ["version", "jurisdiction"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "privacy-policy": {
+      "requiredDirectives": [],
+      "recommendedDirectives": ["letterhead", "footer"],
+      "requiredMetadata": ["title", "date", "document-type", "effective-date"],
+      "recommendedMetadata": ["version", "jurisdiction"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "nda": {
+      "requiredDirectives": ["signature-block"],
+      "recommendedDirectives": ["letterhead"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "effective-date"
+      ],
+      "recommendedMetadata": ["expiration-date", "jurisdiction"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "employment-contract": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": ["header", "footer"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "effective-date"
+      ],
+      "recommendedMetadata": ["jurisdiction", "reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "purchase-order": {
+      "requiredDirectives": ["letterhead"],
+      "recommendedDirectives": ["header", "footer", "contact-info"],
+      "requiredMetadata": ["title", "date", "document-type", "purchase-order"],
+      "recommendedMetadata": [
+        "recipient",
+        "total-amount",
+        "payment-terms",
+        "due-date"
+      ],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "quote": {
+      "requiredDirectives": ["letterhead"],
+      "recommendedDirectives": ["header", "footer", "contact-info", "signature-block"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": [
+        "recipient",
+        "reference-number",
+        "total-amount",
+        "expiration-date"
+      ],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "estimate": {
+      "requiredDirectives": ["letterhead"],
+      "recommendedDirectives": ["header", "footer", "contact-info"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": [
+        "recipient",
+        "reference-number",
+        "total-amount",
+        "expiration-date"
+      ],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "receipt": {
+      "requiredDirectives": ["letterhead"],
+      "recommendedDirectives": ["footer"],
+      "requiredMetadata": ["title", "date", "document-type", "total-amount"],
+      "recommendedMetadata": ["recipient", "reference-number", "payment-terms"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "statement": {
+      "requiredDirectives": ["letterhead", "header"],
+      "recommendedDirectives": ["footer"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": ["recipient", "reference-number", "total-amount"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1,
+        "header": 1
+      }
+    },
+
+    "notice": {
+      "requiredDirectives": ["letterhead"],
+      "recommendedDirectives": ["signature-block"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": ["recipient", "subject", "reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "certificate": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": [],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": ["recipient", "reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "affidavit": {
+      "requiredDirectives": ["signature-block"],
+      "recommendedDirectives": ["letterhead"],
+      "requiredMetadata": ["title", "date", "document-type", "jurisdiction"],
+      "recommendedMetadata": ["reference-number"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "power-of-attorney": {
+      "requiredDirectives": ["signature-block"],
+      "recommendedDirectives": ["letterhead"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "jurisdiction",
+        "effective-date"
+      ],
+      "recommendedMetadata": ["expiration-date", "reference-number"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "will": {
+      "requiredDirectives": ["signature-block"],
+      "recommendedDirectives": [],
+      "requiredMetadata": ["title", "date", "document-type", "jurisdiction"],
+      "recommendedMetadata": ["parties"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "trust": {
+      "requiredDirectives": ["signature-block"],
+      "recommendedDirectives": ["letterhead"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "jurisdiction",
+        "effective-date"
+      ],
+      "recommendedMetadata": ["reference-number"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "deed": {
+      "requiredDirectives": ["signature-block"],
+      "recommendedDirectives": ["letterhead"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "jurisdiction"
+      ],
+      "recommendedMetadata": ["reference-number", "effective-date"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "lease": {
+      "requiredDirectives": ["signature-block"],
+      "recommendedDirectives": ["letterhead", "header", "footer"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "effective-date"
+      ],
+      "recommendedMetadata": [
+        "expiration-date",
+        "jurisdiction",
+        "payment-terms",
+        "total-amount"
+      ],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "rental-agreement": {
+      "requiredDirectives": ["signature-block"],
+      "recommendedDirectives": ["letterhead"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "effective-date"
+      ],
+      "recommendedMetadata": ["expiration-date", "payment-terms", "total-amount"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "service-agreement": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": ["header", "footer"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "effective-date"
+      ],
+      "recommendedMetadata": ["expiration-date", "payment-terms", "jurisdiction"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "consulting-agreement": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": ["header", "footer"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "effective-date"
+      ],
+      "recommendedMetadata": ["expiration-date", "payment-terms"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "partnership-agreement": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": ["header", "footer"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "jurisdiction",
+        "effective-date"
+      ],
+      "recommendedMetadata": ["reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "operating-agreement": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": ["header", "footer"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "jurisdiction",
+        "effective-date"
+      ],
+      "recommendedMetadata": ["reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "shareholder-agreement": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": ["header", "footer"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "jurisdiction",
+        "effective-date"
+      ],
+      "recommendedMetadata": ["reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "articles-of-incorporation": {
+      "requiredDirectives": ["letterhead"],
+      "recommendedDirectives": ["signature-block"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "jurisdiction",
+        "effective-date"
+      ],
+      "recommendedMetadata": ["reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "bylaws": {
+      "requiredDirectives": ["letterhead"],
+      "recommendedDirectives": ["header", "footer"],
+      "requiredMetadata": ["title", "date", "document-type", "effective-date"],
+      "recommendedMetadata": ["version", "jurisdiction"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "resolution": {
+      "requiredDirectives": ["letterhead"],
+      "recommendedDirectives": ["signature-block"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": ["reference-number", "effective-date"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "minutes": {
+      "requiredDirectives": ["letterhead"],
+      "recommendedDirectives": ["header", "footer"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": ["reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "policy": {
+      "requiredDirectives": [],
+      "recommendedDirectives": ["letterhead", "header", "footer"],
+      "requiredMetadata": ["title", "date", "document-type", "effective-date"],
+      "recommendedMetadata": ["version", "status"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "procedure": {
+      "requiredDirectives": [],
+      "recommendedDirectives": ["letterhead", "header", "footer"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": ["version", "status"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "manual": {
+      "requiredDirectives": [],
+      "recommendedDirectives": ["letterhead", "header", "footer"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": ["version", "author"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "guide": {
+      "requiredDirectives": [],
+      "recommendedDirectives": ["letterhead", "header", "footer"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": ["version", "author"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "specification": {
+      "requiredDirectives": [],
+      "recommendedDirectives": ["letterhead", "header", "footer"],
+      "requiredMetadata": ["title", "date", "document-type", "version"],
+      "recommendedMetadata": ["author", "status"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "requirements": {
+      "requiredDirectives": [],
+      "recommendedDirectives": ["letterhead", "header", "footer"],
+      "requiredMetadata": ["title", "date", "document-type", "version"],
+      "recommendedMetadata": ["author", "status"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "whitepaper": {
+      "requiredDirectives": [],
+      "recommendedDirectives": ["letterhead", "header", "footer"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": ["author", "version"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "case-study": {
+      "requiredDirectives": [],
+      "recommendedDirectives": ["letterhead", "header", "footer"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": ["author", "version"],
+      "maxDirectiveOccurrences": {}
+    },
+
+    "brief": {
+      "requiredDirectives": ["letterhead"],
+      "recommendedDirectives": ["header", "footer", "signature-block"],
+      "requiredMetadata": ["title", "date", "document-type", "jurisdiction"],
+      "recommendedMetadata": ["parties", "reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "motion": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": ["header", "footer"],
+      "requiredMetadata": ["title", "date", "document-type", "jurisdiction"],
+      "recommendedMetadata": ["parties", "reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "complaint": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": ["header", "footer"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "jurisdiction"
+      ],
+      "recommendedMetadata": ["reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "answer": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": ["header", "footer"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "jurisdiction"
+      ],
+      "recommendedMetadata": ["reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "discovery": {
+      "requiredDirectives": ["letterhead"],
+      "recommendedDirectives": ["header", "footer", "signature-block"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "jurisdiction"
+      ],
+      "recommendedMetadata": ["reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "subpoena": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": [],
+      "requiredMetadata": ["title", "date", "document-type", "jurisdiction"],
+      "recommendedMetadata": ["parties", "reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "summons": {
+      "requiredDirectives": ["letterhead"],
+      "recommendedDirectives": ["signature-block"],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "jurisdiction"
+      ],
+      "recommendedMetadata": ["reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "warrant": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": [],
+      "requiredMetadata": ["title", "date", "document-type", "jurisdiction"],
+      "recommendedMetadata": ["reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "order": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": [],
+      "requiredMetadata": ["title", "date", "document-type", "jurisdiction"],
+      "recommendedMetadata": ["parties", "reference-number", "effective-date"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "judgment": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": [],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "parties",
+        "jurisdiction"
+      ],
+      "recommendedMetadata": ["reference-number", "effective-date"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "decree": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": [],
+      "requiredMetadata": [
+        "title",
+        "date",
+        "document-type",
+        "jurisdiction",
+        "effective-date"
+      ],
+      "recommendedMetadata": ["parties", "reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "other": {
+      "requiredDirectives": [],
+      "recommendedDirectives": [],
+      "requiredMetadata": ["title", "document-type"],
+      "recommendedMetadata": ["date", "author"],
+      "maxDirectiveOccurrences": {}
+    }
+  }
+}

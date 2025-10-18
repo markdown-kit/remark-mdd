@@ -1,0 +1,380 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mdd-spec.org/schemas/document.json",
+  "title": "MDD Document Schema",
+  "description": "JSON Schema for Markdown Document (MDD) format - semantic document layer for professional business documents",
+  "version": "0.1.0",
+
+  "definitions": {
+    "frontmatter": {
+      "type": "object",
+      "description": "YAML frontmatter metadata for MDD document",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "Document title (required)"
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Document author or organization"
+        },
+        "date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Document date in ISO 8601 format (YYYY-MM-DD)"
+        },
+        "document-type": {
+          "type": "string",
+          "enum": [
+            "business-letter",
+            "invoice",
+            "proposal",
+            "contract",
+            "agreement",
+            "memorandum",
+            "memo",
+            "report",
+            "legal-notice",
+            "legal-guide",
+            "terms-of-service",
+            "privacy-policy",
+            "nda",
+            "employment-contract",
+            "purchase-order",
+            "quote",
+            "estimate",
+            "receipt",
+            "statement",
+            "notice",
+            "certificate",
+            "affidavit",
+            "power-of-attorney",
+            "will",
+            "trust",
+            "deed",
+            "lease",
+            "rental-agreement",
+            "service-agreement",
+            "consulting-agreement",
+            "partnership-agreement",
+            "operating-agreement",
+            "shareholder-agreement",
+            "articles-of-incorporation",
+            "bylaws",
+            "resolution",
+            "minutes",
+            "policy",
+            "procedure",
+            "manual",
+            "guide",
+            "specification",
+            "requirements",
+            "whitepaper",
+            "case-study",
+            "brief",
+            "motion",
+            "complaint",
+            "answer",
+            "discovery",
+            "subpoena",
+            "summons",
+            "warrant",
+            "order",
+            "judgment",
+            "decree",
+            "other"
+          ],
+          "description": "Type of business document"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+(\\.\\d+)?$",
+          "description": "Document version (e.g., 1.0, 2.1.5)"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "final", "approved", "pending", "archived"],
+          "description": "Document status"
+        },
+        "confidential": {
+          "type": "boolean",
+          "description": "Whether document contains confidential information"
+        },
+        "reference-number": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Reference, case, or tracking number"
+        },
+        "jurisdiction": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Legal jurisdiction (for legal documents)"
+        },
+        "effective-date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Effective date for contracts/agreements (YYYY-MM-DD)"
+        },
+        "expiration-date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Expiration date for contracts/agreements (YYYY-MM-DD)"
+        },
+        "parties": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "description": "Parties to contract/agreement"
+        },
+        "subject": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Subject line (for letters, memos)"
+        },
+        "recipient": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Primary recipient"
+        },
+        "cc": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Carbon copy recipients"
+        },
+        "invoice-number": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Invoice number (for invoices)"
+        },
+        "purchase-order": {
+          "type": "string",
+          "maxLength": 50,
+          "description": "Purchase order number"
+        },
+        "payment-terms": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Payment terms (e.g., Net 30, Due on Receipt)"
+        },
+        "due-date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "description": "Payment due date (YYYY-MM-DD)"
+        },
+        "total-amount": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}\\s*[0-9,]+\\.\\d{2}$",
+          "description": "Total amount with currency code (e.g., USD 1,234.56)"
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+          "description": "Document language (ISO 639-1 code, e.g., en, en-US, el-GR)"
+        },
+        "keywords": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Document keywords for search/categorization"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Document tags"
+        }
+      },
+      "required": ["title", "document-type"],
+      "additionalProperties": true
+    },
+
+    "directiveType": {
+      "type": "string",
+      "enum": [
+        "letterhead",
+        "header",
+        "footer",
+        "contact-info",
+        "signature-block",
+        "page-break",
+        "section-break"
+      ],
+      "description": "Valid MDD directive types"
+    },
+
+    "semanticClass": {
+      "type": "string",
+      "enum": [
+        "invoice-title",
+        "contract-title",
+        "legal-notice",
+        "numbered-section",
+        "long-paragraph",
+        "legal-clause",
+        "numbered-item",
+        "document-section",
+        "subsection",
+        "section-title",
+        "important",
+        "warning",
+        "note",
+        "example",
+        "quote-block",
+        "signature-line",
+        "witness-line",
+        "notary-line",
+        "party-name",
+        "effective-date",
+        "expiration-date",
+        "payment-terms",
+        "total-amount",
+        "item-description",
+        "item-quantity",
+        "item-price",
+        "subtotal",
+        "tax",
+        "total",
+        "footer-note",
+        "page-number",
+        "confidential-notice",
+        "copyright-notice",
+        "recipient-address",
+        "sender-address",
+        "date-line",
+        "subject-line",
+        "salutation",
+        "closing",
+        "enclosure",
+        "cc-line",
+        "reference-number"
+      ],
+      "description": "Valid semantic CSS classes for MDD elements"
+    },
+
+    "textFormattingType": {
+      "type": "string",
+      "enum": ["superscript", "subscript", "internalRef"],
+      "description": "Text formatting pattern types"
+    },
+
+    "documentTypeRequirements": {
+      "type": "object",
+      "description": "Required and recommended elements per document type",
+      "properties": {
+        "requiredDirectives": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/directiveType" },
+          "description": "Directives that MUST be present"
+        },
+        "recommendedDirectives": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/directiveType" },
+          "description": "Directives that SHOULD be present"
+        },
+        "requiredMetadata": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Frontmatter fields that MUST be present"
+        },
+        "recommendedMetadata": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Frontmatter fields that SHOULD be present"
+        },
+        "maxDirectiveOccurrences": {
+          "type": "object",
+          "patternProperties": {
+            ".*": { "type": "integer", "minimum": 1 }
+          },
+          "description": "Maximum allowed occurrences per directive type"
+        }
+      }
+    },
+
+    "validationError": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["error", "warning", "info"]
+        },
+        "code": {
+          "type": "string",
+          "description": "Error code (e.g., MISSING_END_MARKER, INVALID_DATE_FORMAT)"
+        },
+        "message": {
+          "type": "string",
+          "description": "Human-readable error message"
+        },
+        "location": {
+          "type": "object",
+          "properties": {
+            "line": { "type": "integer", "minimum": 1 },
+            "column": { "type": "integer", "minimum": 1 },
+            "directive": { "type": "string" },
+            "field": { "type": "string" }
+          }
+        },
+        "suggestion": {
+          "type": "string",
+          "description": "Suggested fix"
+        }
+      },
+      "required": ["type", "code", "message"]
+    }
+  },
+
+  "type": "object",
+  "properties": {
+    "frontmatter": {
+      "$ref": "#/definitions/frontmatter"
+    },
+    "content": {
+      "type": "string",
+      "description": "Document body content (markdown with MDD directives)"
+    },
+    "directives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": { "$ref": "#/definitions/directiveType" },
+          "content": { "type": "string" },
+          "line": { "type": "integer", "minimum": 1 },
+          "hasEndMarker": { "type": "boolean" }
+        },
+        "required": ["type", "line"]
+      },
+      "description": "Extracted directives from document"
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "valid": { "type": "boolean" },
+        "errors": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/validationError" }
+        },
+        "warnings": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/validationError" }
+        }
+      }
+    }
+  },
+  "required": ["frontmatter", "content"]
+}
