@@ -1,6 +1,6 @@
 {
   "name": "@entro314labs/remark-mdd",
-  "version": "0.0.10",
+  "version": "0.0.15",
   "description": "Remark plugins and validation for MDD (Markdown Document) format - semantic document layer for professional business documents",
   "main": "index.js",
   "type": "module",
@@ -54,9 +54,9 @@
     "unist-util-visit": "^5.0.0"
   },
   "peerDependencies": {
-    "remark": "^15.0.0"
+    "remark": "^15.0.1"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.x"
   }
 }
