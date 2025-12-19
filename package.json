@@ -1,6 +1,6 @@
 {
   "name": "@entro314labs/remark-mdd",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Remark plugins and validation for MDD (Markdown Document) format - semantic document layer for professional business documents",
   "main": "index.js",
   "type": "module",
