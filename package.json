@@ -1,9 +1,44 @@
 {
   "name": "@markdownkit/remark-mdd",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "description": "Remark plugins and validation for MDD (Markdown Document) format - semantic document layer for professional business documents",
-  "main": "index.js",
+  "keywords": [
+    "business-documents",
+    "document-structure",
+    "document-validation",
+    "json-schema",
+    "markdown",
+    "mdast",
+    "mdd",
+    "professional-documents",
+    "remark",
+    "remark-plugin",
+    "schema-validation",
+    "semantic-markdown",
+    "typescript",
+    "unified"
+  ],
+  "homepage": "https://github.com/markdown-kit/remark-mdd#readme",
+  "bugs": {
+    "url": "https://github.com/markdown-kit/remark-mdd/issues"
+  },
+  "license": "MIT",
+  "author": "Dominikos Pritis <idominikos@outlook.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/markdown-kit/remark-mdd.git"
+  },
+  "files": [
+    "plugins/**/*.js",
+    "lib/**/*.js",
+    "schema/**/*.json",
+    "types/**/*.d.ts",
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
   "type": "module",
+  "main": "index.js",
   "exports": {
     ".": "./index.js",
     "./plugins/document-structure": "./plugins/remark-mdd-document-structure.js",
@@ -15,43 +50,23 @@
     "./schema/requirements": "./schema/document-type-requirements.json",
     "./types": "./types/mdd.d.ts"
   },
-  "files": [
-    "plugins/**/*.js",
-    "lib/**/*.js",
-    "schema/**/*.json",
-    "types/**/*.d.ts",
-    "index.js",
-    "README.md",
-    "LICENSE"
-  ],
-  "keywords": [
-    "remark",
-    "remark-plugin",
-    "markdown",
-    "mdd",
-    "semantic-markdown",
-    "business-documents",
-    "professional-documents",
-    "document-validation",
-    "schema-validation",
-    "json-schema",
-    "typescript",
-    "document-structure",
-    "unified",
-    "mdast"
-  ],
-  "author": "Dominikos Pritis <idominikos@outlook.com>",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/markdown-kit/remark-mdd.git"
+  "scripts": {
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check .",
+    "lint": "oxlint .",
+    "lint:ci": "oxlint --deny-warnings .",
+    "lint:fix": "oxlint --fix .",
+    "lint:fix-unsafe": "oxlint --import-plugin node-plugin --type-aware --type-check --vitest-plugin --fix --fix-suggestions --fix-dangerously .",
+    "check:fix-suggestions": "oxlint --import-plugin node-plugin --type-aware --type-check --vitest-plugin --fix --fix-suggestions . && oxfmt --write .",
+    "check": "pnpm run format:check && pnpm run lint:ci"
   },
-  "bugs": {
-    "url": "https://github.com/markdown-kit/remark-mdd/issues"
-  },
-  "homepage": "https://github.com/markdown-kit/remark-mdd#readme",
   "dependencies": {
-    "unist-util-visit": "^5.0.0"
+    "unist-util-visit": "^5.1.0"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.41.0",
+    "oxlint": "^1.56.0",
+    "oxlint-tsgolint": "^0.17.0"
   },
   "peerDependencies": {
     "remark": "^15.0.1"

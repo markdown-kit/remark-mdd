@@ -1,0 +1,85 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Environment variables
+.env*
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.nuxt/
+.cache/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Temporary folders
+.tmp/
+temp/
+*.tmp
+
+# Coverage directory used by tools like istanbul
+coverage/
+.nyc_output/
+
+# OXC cache
+.oxlintcache
+
+# Remark cache (if any)
+.remark-cache/
+
+# Optional npm cache directory
+.npm/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Backup files
+*.backup
+*.bak
+.claude/settings.local.json
+content/blog/index.md
+content/docs/api-reference.md
+content/docs/getting-started.md
+content/guides/style-guide.md
+PUBLISHING.md
+enhancement.md
+unformatted-text.md
+formatted-text.md

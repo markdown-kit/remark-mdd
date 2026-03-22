@@ -4,8 +4,8 @@
  * @see https://github.com/mdd-spec/mdd
  */
 
-import type { Node, Parent, Literal } from 'unist';
-import type { Root, Content, Heading, Paragraph, Text } from 'mdast';
+import type { Root, Content, Heading, Paragraph, Text } from 'mdast'
+import type { Node, Parent, Literal } from 'unist'
 
 /**
  * Valid MDD directive types
@@ -17,7 +17,7 @@ export type DirectiveType =
   | 'contact-info'
   | 'signature-block'
   | 'page-break'
-  | 'section-break';
+  | 'section-break'
 
 /**
  * Valid MDD document types
@@ -79,7 +79,7 @@ export type DocumentType =
   | 'order'
   | 'judgment'
   | 'decree'
-  | 'other';
+  | 'other'
 
 /**
  * Valid semantic CSS classes for MDD elements
@@ -126,115 +126,115 @@ export type SemanticClass =
   | 'closing'
   | 'enclosure'
   | 'cc-line'
-  | 'reference-number';
+  | 'reference-number'
 
 /**
  * Document status
  */
-export type DocumentStatus = 'draft' | 'final' | 'approved' | 'pending' | 'archived';
+export type DocumentStatus = 'draft' | 'final' | 'approved' | 'pending' | 'archived'
 
 /**
  * MDD document frontmatter metadata
  */
 export interface MDDFrontmatter {
   /** Document title (required) */
-  title: string;
+  title: string
 
   /** Type of business document (required) */
-  'document-type': DocumentType;
+  'document-type': DocumentType
 
   /** Document author or organization */
-  author?: string;
+  author?: string
 
   /** Document date in ISO 8601 format (YYYY-MM-DD) */
-  date?: string;
+  date?: string
 
   /** Document version (e.g., 1.0, 2.1.5) */
-  version?: string;
+  version?: string
 
   /** Document status */
-  status?: DocumentStatus;
+  status?: DocumentStatus
 
   /** Whether document contains confidential information */
-  confidential?: boolean;
+  confidential?: boolean
 
   /** Reference, case, or tracking number */
-  'reference-number'?: string;
+  'reference-number'?: string
 
   /** Legal jurisdiction (for legal documents) */
-  jurisdiction?: string;
+  jurisdiction?: string
 
   /** Effective date for contracts/agreements (YYYY-MM-DD) */
-  'effective-date'?: string;
+  'effective-date'?: string
 
   /** Expiration date for contracts/agreements (YYYY-MM-DD) */
-  'expiration-date'?: string;
+  'expiration-date'?: string
 
   /** Parties to contract/agreement */
-  parties?: string[];
+  parties?: string[]
 
   /** Subject line (for letters, memos) */
-  subject?: string;
+  subject?: string
 
   /** Primary recipient */
-  recipient?: string;
+  recipient?: string
 
   /** Carbon copy recipients */
-  cc?: string[];
+  cc?: string[]
 
   /** Invoice number (for invoices) */
-  'invoice-number'?: string;
+  'invoice-number'?: string
 
   /** Purchase order number */
-  'purchase-order'?: string;
+  'purchase-order'?: string
 
   /** Payment terms (e.g., Net 30, Due on Receipt) */
-  'payment-terms'?: string;
+  'payment-terms'?: string
 
   /** Payment due date (YYYY-MM-DD) */
-  'due-date'?: string;
+  'due-date'?: string
 
   /** Total amount with currency code (e.g., USD 1,234.56) */
-  'total-amount'?: string;
+  'total-amount'?: string
 
   /** Document language (ISO 639-1 code, e.g., en, en-US, el-GR) */
-  language?: string;
+  language?: string
 
   /** Document keywords for search/categorization */
-  keywords?: string[];
+  keywords?: string[]
 
   /** Document tags */
-  tags?: string[];
+  tags?: string[]
 
   /** Allow additional custom properties */
-  [key: string]: string | string[] | boolean | undefined;
+  [key: string]: string | string[] | boolean | undefined
 }
 
 /**
  * Text formatting pattern types
  */
-export type TextFormattingType = 'superscript' | 'subscript' | 'internalRef';
+export type TextFormattingType = 'superscript' | 'subscript' | 'internalRef'
 
 /**
  * Validation error severity
  */
-export type ValidationSeverity = 'error' | 'warning' | 'info';
+export type ValidationSeverity = 'error' | 'warning' | 'info'
 
 /**
  * Location information for validation errors
  */
 export interface ValidationLocation {
   /** Line number (1-indexed) */
-  line?: number;
+  line?: number
 
   /** Column number (1-indexed) */
-  column?: number;
+  column?: number
 
   /** Directive name if applicable */
-  directive?: string;
+  directive?: string
 
   /** Field name if applicable */
-  field?: string;
+  field?: string
 }
 
 /**
@@ -242,19 +242,19 @@ export interface ValidationLocation {
  */
 export interface ValidationError {
   /** Severity level */
-  type: ValidationSeverity;
+  type: ValidationSeverity
 
   /** Error code (e.g., MISSING_END_MARKER, INVALID_DATE_FORMAT) */
-  code: string;
+  code: string
 
   /** Human-readable error message */
-  message: string;
+  message: string
 
   /** Location in document */
-  location?: ValidationLocation;
+  location?: ValidationLocation
 
   /** Suggested fix */
-  suggestion?: string;
+  suggestion?: string
 }
 
 /**
@@ -262,16 +262,16 @@ export interface ValidationError {
  */
 export interface ValidationResult {
   /** Whether document is valid */
-  valid: boolean;
+  valid: boolean
 
   /** Validation errors */
-  errors: ValidationError[];
+  errors: ValidationError[]
 
   /** Validation warnings */
-  warnings: ValidationError[];
+  warnings: ValidationError[]
 
   /** Informational messages */
-  info?: ValidationError[];
+  info?: ValidationError[]
 }
 
 /**
@@ -279,19 +279,19 @@ export interface ValidationResult {
  */
 export interface DirectiveOccurrence {
   /** Directive type */
-  type: DirectiveType;
+  type: DirectiveType
 
   /** Content inside directive */
-  content: string;
+  content: string
 
   /** Line number where directive starts (1-indexed) */
-  line: number;
+  line: number
 
   /** Whether directive has proper end marker */
-  hasEndMarker: boolean;
+  hasEndMarker: boolean
 
   /** Column number where directive starts (1-indexed) */
-  column?: number;
+  column?: number
 }
 
 /**
@@ -299,25 +299,25 @@ export interface DirectiveOccurrence {
  */
 export interface TextFormattingMatch {
   /** Formatting type */
-  type: TextFormattingType;
+  type: TextFormattingType
 
   /** Regex match result */
-  match: RegExpMatchArray;
+  match: RegExpMatchArray
 
   /** Start position in text */
-  start: number;
+  start: number
 
   /** End position in text */
-  end: number;
+  end: number
 
   /** Formatted content */
-  content?: string;
+  content?: string
 
   /** Reference type (for internal refs) */
-  refType?: string;
+  refType?: string
 
   /** Reference number (for internal refs) */
-  refNumber?: string;
+  refNumber?: string
 }
 
 /**
@@ -325,19 +325,19 @@ export interface TextFormattingMatch {
  */
 export interface DocumentTypeRequirements {
   /** Directives that MUST be present */
-  requiredDirectives: DirectiveType[];
+  requiredDirectives: DirectiveType[]
 
   /** Directives that SHOULD be present */
-  recommendedDirectives: DirectiveType[];
+  recommendedDirectives: DirectiveType[]
 
   /** Frontmatter fields that MUST be present */
-  requiredMetadata: (keyof MDDFrontmatter)[];
+  requiredMetadata: Array<keyof MDDFrontmatter>
 
   /** Frontmatter fields that SHOULD be present */
-  recommendedMetadata: (keyof MDDFrontmatter)[];
+  recommendedMetadata: Array<keyof MDDFrontmatter>
 
   /** Maximum allowed occurrences per directive type */
-  maxDirectiveOccurrences: Partial<Record<DirectiveType, number>>;
+  maxDirectiveOccurrences: Partial<Record<DirectiveType, number>>
 }
 
 /**
@@ -345,19 +345,19 @@ export interface DocumentTypeRequirements {
  */
 export interface MDDDocument {
   /** Frontmatter metadata */
-  frontmatter: MDDFrontmatter;
+  frontmatter: MDDFrontmatter
 
   /** Document body content */
-  content: string;
+  content: string
 
   /** Extracted directives */
-  directives?: DirectiveOccurrence[];
+  directives?: DirectiveOccurrence[]
 
   /** Validation result */
-  validation?: ValidationResult;
+  validation?: ValidationResult
 
   /** AST root node */
-  ast?: Root;
+  ast?: Root
 }
 
 /**
@@ -365,16 +365,16 @@ export interface MDDDocument {
  */
 export interface MDDDocumentStructureOptions {
   /** Whether to validate directive nesting */
-  validateNesting?: boolean;
+  validateNesting?: boolean
 
   /** Whether to allow multiple occurrences of directives */
-  allowMultiple?: boolean;
+  allowMultiple?: boolean
 
   /** Custom directive patterns */
-  customDirectives?: Record<string, RegExp>;
+  customDirectives?: Record<string, RegExp>
 
   /** Strict mode - fail on warnings */
-  strict?: boolean;
+  strict?: boolean
 }
 
 /**
@@ -382,16 +382,16 @@ export interface MDDDocumentStructureOptions {
  */
 export interface MDDTextFormattingOptions {
   /** Whether to auto-number sections */
-  autoNumberSections?: boolean;
+  autoNumberSections?: boolean
 
   /** Whether to detect legal clauses */
-  detectLegalClauses?: boolean;
+  detectLegalClauses?: boolean
 
   /** Whether to validate cross-references */
-  validateReferences?: boolean;
+  validateReferences?: boolean
 
   /** Custom formatting patterns */
-  customPatterns?: Record<string, RegExp>;
+  customPatterns?: Record<string, RegExp>
 }
 
 /**
@@ -399,28 +399,28 @@ export interface MDDTextFormattingOptions {
  */
 export interface SectionCounter {
   /** H1 counter */
-  h1: number;
+  h1: number
 
   /** H2 counter */
-  h2: number;
+  h2: number
 
   /** H3 counter */
-  h3: number;
+  h3: number
 
   /** Current section ID */
-  currentId?: string;
+  currentId?: string
 }
 
 /**
  * Extended mdast HTML node for LaTeX markers
  */
 export interface LaTeXMarker extends Literal {
-  type: 'html';
-  value: string;
+  type: 'html'
+  value: string
   data?: {
-    directive?: DirectiveType;
-    content?: string;
-  };
+    directive?: DirectiveType
+    content?: string
+  }
 }
 
 /**
@@ -429,27 +429,27 @@ export interface LaTeXMarker extends Literal {
 export interface MDDHeading extends Heading {
   data?: {
     hProperties?: {
-      className?: string[];
-      id?: string;
-    };
-    sectionNumber?: string;
-  };
+      className?: string[]
+      id?: string
+    }
+    sectionNumber?: string
+  }
 }
 
 export interface MDDParagraph extends Paragraph {
   data?: {
     hProperties?: {
-      className?: string[];
-    };
-    directive?: DirectiveType;
-  };
+      className?: string[]
+    }
+    directive?: DirectiveType
+  }
 }
 
 export interface MDDText extends Text {
   data?: {
-    formatted?: boolean;
-    formattingType?: TextFormattingType;
-  };
+    formatted?: boolean
+    formattingType?: TextFormattingType
+  }
 }
 
 /**
@@ -457,8 +457,8 @@ export interface MDDText extends Text {
  */
 export type ValidatorFunction = (
   document: MDDDocument,
-  requirements?: DocumentTypeRequirements
-) => ValidationResult;
+  requirements?: DocumentTypeRequirements,
+) => ValidationResult
 
 /**
  * Directive processor function signature
@@ -466,27 +466,27 @@ export type ValidatorFunction = (
 export type DirectiveProcessor = (
   node: Paragraph,
   index: number,
-  parent: Parent
-) => LaTeXMarker | null;
+  parent: Parent,
+) => LaTeXMarker | null
 
 /**
  * Pattern match result from document structure plugin
  */
 export interface DirectiveMatch {
   /** Directive type */
-  type: DirectiveType;
+  type: DirectiveType
 
   /** AST node reference */
-  node: Paragraph;
+  node: Paragraph
 
   /** Index in parent.children */
-  index: number;
+  index: number
 
   /** Parent node */
-  parent: Parent;
+  parent: Parent
 
   /** Matched text content */
-  text: string;
+  text: string
 }
 
 /**
@@ -494,22 +494,22 @@ export interface DirectiveMatch {
  */
 export interface MDDValidationOptions {
   /** Validate frontmatter schema */
-  validateFrontmatter?: boolean;
+  validateFrontmatter?: boolean
 
   /** Validate directive structure */
-  validateDirectives?: boolean;
+  validateDirectives?: boolean
 
   /** Validate cross-references */
-  validateReferences?: boolean;
+  validateReferences?: boolean
 
   /** Validate document type requirements */
-  validateRequirements?: boolean;
+  validateRequirements?: boolean
 
   /** Fail on warnings */
-  strict?: boolean;
+  strict?: boolean
 
   /** Include informational messages */
-  includeInfo?: boolean;
+  includeInfo?: boolean
 }
 
 /**
@@ -517,19 +517,19 @@ export interface MDDValidationOptions {
  */
 export interface PreviewOptions {
   /** Output file path (default: input.html) */
-  output?: string;
+  output?: string
 
   /** Include validation report in HTML */
-  includeValidation?: boolean;
+  includeValidation?: boolean
 
   /** Custom CSS path */
-  customCSS?: string;
+  customCSS?: string
 
   /** Validate before rendering */
-  validate?: boolean;
+  validate?: boolean
 
   /** Fail on validation errors */
-  failOnError?: boolean;
+  failOnError?: boolean
 }
 
 /**
@@ -537,14 +537,14 @@ export interface PreviewOptions {
  */
 export interface CLIValidationResult extends ValidationResult {
   /** Input file path */
-  filePath: string;
+  filePath: string
 
   /** Processing time in milliseconds */
-  processingTime: number;
+  processingTime: number
 
   /** Number of directives found */
-  directiveCount: number;
+  directiveCount: number
 
   /** Exit code (0 = success, 1 = errors, 2 = warnings in strict mode) */
-  exitCode: number;
+  exitCode: number
 }

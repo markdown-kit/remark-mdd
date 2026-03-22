@@ -20,7 +20,7 @@
  * Architecture: Stage 1 of two-stage conversion (text patterns → HTML nodes → final format)
  */
 
-import { visit } from 'unist-util-visit';
+import { visit } from 'unist-util-visit'
 
 /**
  * Text formatting patterns
@@ -28,16 +28,16 @@ import { visit } from 'unist-util-visit';
 const TEXT_PATTERNS = {
   // Superscript: text^super^
   superscript: /\^([^^\s]+)\^/g,
-  
+
   // Subscript: text~sub~
   subscript: /~([^~\s]+)~/g,
-  
+
   // Internal references: @section-1, @table-2, @figure-3
   internalRef: /@([a-z]+)-(\d+)/g,
-  
+
   // Quote typography: "text" -> proper quotes
-  quotes: /\"([^"]+)\"/g
-};
+  quotes: /"([^"]+)"/g,
+}
 
 /**
  * MDD text formatting plugin
@@ -49,54 +49,54 @@ export default function remarkMddTextFormatting() {
   return function transformer(tree, file) {
     // Only process .mdd files (MDD-specific typography patterns)
     if (!file.path?.endsWith('.mdd')) {
-      return;
+      return
     }
 
     // Process text formatting in all text nodes
     visit(tree, 'text', (node, index, parent) => {
-      if (!node.value) return;
-      
-      const originalText = node.value;
-      let hasFormatting = false;
-      
+      if (!node.value) return
+
+      const originalText = node.value
+      let hasFormatting = false
+
       // Check if text contains any formatting
       for (const pattern of Object.values(TEXT_PATTERNS)) {
         if (pattern.test(originalText)) {
-          hasFormatting = true;
-          break;
+          hasFormatting = true
+          break
         }
       }
-      
-      if (!hasFormatting) return;
-      
+
+      if (!hasFormatting) return
+
       // Process formatting and create new nodes
-      const newNodes = processTextFormatting(originalText);
-      
+      const newNodes = processTextFormatting(originalText)
+
       if (newNodes.length > 1) {
         // Replace single text node with multiple formatted nodes
-        parent.children.splice(index, 1, ...newNodes);
+        parent.children.splice(index, 1, ...newNodes)
       }
-    });
-    
+    })
+
     // Process heading structure and numbering
-    processHeadingStructure(tree);
-    
+    processHeadingStructure(tree)
+
     // Process paragraph structure
-    processParagraphStructure(tree);
-  };
+    processParagraphStructure(tree)
+  }
 }
 
 /**
  * Process text formatting and return array of nodes
  */
 function processTextFormatting(text) {
-  const nodes = [];
-  let currentIndex = 0;
-  let workingText = text;
-  
+  const nodes = []
+  let currentIndex = 0
+  const workingText = text
+
   // Process all formatting types
-  const allMatches = [];
-  
+  const allMatches = []
+
   // Find superscripts
   for (const match of workingText.matchAll(TEXT_PATTERNS.superscript)) {
     allMatches.push({
@@ -104,21 +104,21 @@ function processTextFormatting(text) {
       match,
       start: match.index,
       end: match.index + match[0].length,
-      content: match[1]
-    });
+      content: match[1],
+    })
   }
-  
-  // Find subscripts  
+
+  // Find subscripts
   for (const match of workingText.matchAll(TEXT_PATTERNS.subscript)) {
     allMatches.push({
       type: 'subscript',
       match,
       start: match.index,
       end: match.index + match[0].length,
-      content: match[1]
-    });
+      content: match[1],
+    })
   }
-  
+
   // Find internal references
   for (const match of workingText.matchAll(TEXT_PATTERNS.internalRef)) {
     allMatches.push({
@@ -127,10 +127,10 @@ function processTextFormatting(text) {
       start: match.index,
       end: match.index + match[0].length,
       refType: match[1],
-      refNumber: match[2]
-    });
+      refNumber: match[2],
+    })
   }
-  
+
   // Find quotes
   for (const match of workingText.matchAll(TEXT_PATTERNS.quotes)) {
     allMatches.push({
@@ -138,52 +138,54 @@ function processTextFormatting(text) {
       match,
       start: match.index,
       end: match.index + match[0].length,
-      content: match[1]
-    });
+      content: match[1],
+    })
   }
-  
+
   // Sort matches by position
-  allMatches.sort((a, b) => a.start - b.start);
-  
+  allMatches.sort((a, b) => a.start - b.start)
+
   // Process matches and build nodes
   for (const formatMatch of allMatches) {
     // Add text before the match
     if (formatMatch.start > currentIndex) {
-      const beforeText = workingText.slice(currentIndex, formatMatch.start);
+      const beforeText = workingText.slice(currentIndex, formatMatch.start)
       if (beforeText) {
         nodes.push({
           type: 'text',
-          value: beforeText
-        });
+          value: beforeText,
+        })
       }
     }
-    
+
     // Add formatted node
-    nodes.push(createFormattedNode(formatMatch));
-    
-    currentIndex = formatMatch.end;
+    nodes.push(createFormattedNode(formatMatch))
+
+    currentIndex = formatMatch.end
   }
-  
+
   // Add remaining text
   if (currentIndex < workingText.length) {
-    const remainingText = workingText.slice(currentIndex);
+    const remainingText = workingText.slice(currentIndex)
     if (remainingText) {
       nodes.push({
         type: 'text',
-        value: remainingText
-      });
+        value: remainingText,
+      })
     }
   }
-  
+
   // If no formatting found, return original text
   if (nodes.length === 0) {
-    return [{
-      type: 'text',
-      value: text
-    }];
+    return [
+      {
+        type: 'text',
+        value: text,
+      },
+    ]
   }
-  
-  return nodes;
+
+  return nodes
 }
 
 /**
@@ -194,38 +196,40 @@ function createFormattedNode(formatMatch) {
     case 'superscript':
       return {
         type: 'html',
-        value: `<sup>${formatMatch.content}</sup>`
-      };
-      
+        value: `<sup>${formatMatch.content}</sup>`,
+      }
+
     case 'subscript':
       return {
         type: 'html',
-        value: `<sub>${formatMatch.content}</sub>`
-      };
-      
+        value: `<sub>${formatMatch.content}</sub>`,
+      }
+
     case 'internalRef':
-      const refLabel = formatMatch.refType.charAt(0).toUpperCase() + formatMatch.refType.slice(1);
+      const refLabel = formatMatch.refType.charAt(0).toUpperCase() + formatMatch.refType.slice(1)
       return {
         type: 'link',
         url: `#${formatMatch.refType}-${formatMatch.refNumber}`,
         title: `Reference to ${refLabel} ${formatMatch.refNumber}`,
-        children: [{
-          type: 'text',
-          value: `${refLabel} ${formatMatch.refNumber}`
-        }]
-      };
-      
+        children: [
+          {
+            type: 'text',
+            value: `${refLabel} ${formatMatch.refNumber}`,
+          },
+        ],
+      }
+
     case 'quote':
       return {
         type: 'text',
-        value: `"${formatMatch.content}"`  // Use proper typography quotes
-      };
-      
+        value: `"${formatMatch.content}"`, // Use proper typography quotes
+      }
+
     default:
       return {
         type: 'text',
-        value: formatMatch.match[0]
-      };
+        value: formatMatch.match[0],
+      }
   }
 }
 
@@ -233,48 +237,49 @@ function createFormattedNode(formatMatch) {
  * Process heading structure and add proper hierarchy
  */
 function processHeadingStructure(tree) {
-  let sectionCounters = [0, 0, 0, 0, 0, 0]; // For H1-H6
-  
+  const sectionCounters = [0, 0, 0, 0, 0, 0] // For H1-H6
+
   visit(tree, 'heading', (node) => {
-    const level = node.depth;
-    
+    const level = node.depth
+
     // Reset counters for deeper levels
     for (let i = level; i < sectionCounters.length; i++) {
       if (i === level - 1) {
-        sectionCounters[i]++;
+        sectionCounters[i]++
       } else {
-        sectionCounters[i] = 0;
+        sectionCounters[i] = 0
       }
     }
-    
+
     // Add section numbering to headings (optional)
     if (node.children?.[0]?.value) {
-      const text = node.children[0].value;
-      
+      const text = node.children[0].value
+
       // Check if heading already has numbering
       if (!/^\d+\./.test(text)) {
         // Add automatic numbering for formal documents
-        const numberPrefix = generateSectionNumber(sectionCounters, level);
-        if (numberPrefix && level <= 3) { // Only number H1-H3
-          node.children[0].value = `${numberPrefix} ${text}`;
+        const numberPrefix = generateSectionNumber(sectionCounters, level)
+        if (numberPrefix && level <= 3) {
+          // Only number H1-H3
+          node.children[0].value = `${numberPrefix} ${text}`
         }
       }
-      
+
       // Add ID for internal references
-      const headingId = generateHeadingId(text, level, sectionCounters);
-      if (!node.data) node.data = {};
-      if (!node.data.hProperties) node.data.hProperties = {};
-      node.data.hProperties.id = headingId;
+      const headingId = generateHeadingId(text, level, sectionCounters)
+      node.data ??= {}
+      node.data.hProperties ??= {}
+      node.data.hProperties.id = headingId
     }
-  });
+  })
 }
 
 /**
  * Generate section number (1, 1.1, 1.1.1)
  */
 function generateSectionNumber(counters, level) {
-  const relevantCounters = counters.slice(0, level).filter(c => c > 0);
-  return relevantCounters.length > 0 ? relevantCounters.join('.') : '';
+  const relevantCounters = counters.slice(0, level).filter((c) => c > 0)
+  return relevantCounters.length > 0 ? relevantCounters.join('.') : ''
 }
 
 /**
@@ -282,14 +287,15 @@ function generateSectionNumber(counters, level) {
  */
 function generateHeadingId(text, level, counters) {
   // Create ID from text (lowercase, replace spaces with hyphens)
-  const baseId = text.toLowerCase()
+  const baseId = text
+    .toLowerCase()
     .replace(/[^\w\s-]/g, '') // Remove special characters
-    .replace(/\s+/g, '-')     // Replace spaces with hyphens
-    .replace(/^-+|-+$/g, ''); // Trim hyphens
-  
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/^-+|-+$/g, '') // Trim hyphens
+
   // Add section prefix for formal references
-  const sectionNumber = generateSectionNumber(counters, level);
-  return sectionNumber ? `section-${sectionNumber.replace(/\./g, '-')}` : baseId;
+  const sectionNumber = generateSectionNumber(counters, level)
+  return sectionNumber ? `section-${sectionNumber.replace(/\./g, '-')}` : baseId
 }
 
 /**
@@ -297,31 +303,34 @@ function generateHeadingId(text, level, counters) {
  */
 function processParagraphStructure(tree) {
   visit(tree, 'paragraph', (node) => {
-    if (!node.children?.length) return;
-    
+    if (!node.children?.length) return
+
     // Add proper paragraph spacing classes based on context
-    if (!node.data) node.data = {};
-    if (!node.data.hProperties) node.data.hProperties = {};
-    
+    node.data ??= {}
+    node.data.hProperties ??= {}
+
     // Check if paragraph follows a heading
-    const text = node.children.map(child => 
-      child.value || (child.children?.map(grandchild => grandchild.value || '').join('')) || ''
-    ).join('');
-    
+    const text = node.children
+      .map(
+        (child) =>
+          child.value ?? child.children?.map((grandchild) => grandchild.value ?? '').join('') ?? '',
+      )
+      .join('')
+
     // Add semantic classes for different paragraph types
     if (text.length > 200) {
-      node.data.hProperties.className = ['long-paragraph'];
+      node.data.hProperties.className = ['long-paragraph']
     }
-    
+
     // Identify legal/formal text patterns
     if (/^(WHEREAS|THEREFORE|PROVIDED|SUBJECT TO)/i.test(text)) {
-      node.data.hProperties.className = ['legal-clause'];
+      node.data.hProperties.className = ['legal-clause']
     }
-    
+
     if (/^\d+\.\s/.test(text)) {
-      node.data.hProperties.className = ['numbered-item'];
+      node.data.hProperties.className = ['numbered-item']
     }
-  });
+  })
 }
 
 /**
@@ -330,29 +339,29 @@ function processParagraphStructure(tree) {
 export function hasTextFormatting(text) {
   for (const pattern of Object.values(TEXT_PATTERNS)) {
     if (pattern.test(text)) {
-      return true;
+      return true
     }
   }
-  return false;
+  return false
 }
 
 /**
  * Extract all references from document
  */
 export function extractReferences(tree) {
-  const references = [];
-  
+  const references = []
+
   visit(tree, 'text', (node) => {
-    if (!node.value) return;
-    
+    if (!node.value) return
+
     for (const match of node.value.matchAll(TEXT_PATTERNS.internalRef)) {
       references.push({
         type: match[1],
         number: match[2],
-        id: `${match[1]}-${match[2]}`
-      });
+        id: `${match[1]}-${match[2]}`,
+      })
     }
-  });
-  
-  return references;
+  })
+
+  return references
 }
