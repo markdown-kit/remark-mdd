@@ -32,8 +32,10 @@
           "enum": [
             "business-letter",
             "invoice",
+            "business-proposal",
             "proposal",
             "contract",
+            "legal-contract",
             "agreement",
             "memorandum",
             "memo",
@@ -230,6 +232,7 @@
         "subsection",
         "section-title",
         "important",
+        "emphasis",
         "warning",
         "note",
         "example",

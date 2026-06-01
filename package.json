@@ -1,6 +1,6 @@
 {
   "name": "@markdownkit/remark-mdd",
-  "version": "2.1.0",
+  "version": "2.2.1",
   "description": "Remark plugins and validation for MDD (Markdown Document) format - semantic document layer for professional business documents",
   "keywords": [
     "business-documents",
@@ -58,20 +58,32 @@
     "lint:fix": "oxlint --fix .",
     "lint:fix-unsafe": "oxlint --import-plugin node-plugin --type-aware --type-check --vitest-plugin --fix --fix-suggestions --fix-dangerously .",
     "check:fix-suggestions": "oxlint --import-plugin node-plugin --type-aware --type-check --vitest-plugin --fix --fix-suggestions . && oxfmt --write .",
-    "check": "pnpm run format:check && pnpm run lint:ci"
+    "check": "pnpm run format:check && pnpm run lint:ci",
+    "test": "node --test",
+    "verify:pack": "node scripts/verify-package.mjs",
+    "prepublishOnly": "pnpm run test && pnpm run verify:pack"
   },
   "dependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "js-yaml": "^4.2.0",
     "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
-    "oxfmt": "^0.41.0",
-    "oxlint": "^1.56.0",
-    "oxlint-tsgolint": "^0.17.0"
+    "oxfmt": "^0.52.0",
+    "oxlint": "^1.67.0",
+    "oxlint-tsgolint": "^0.23.0"
   },
   "peerDependencies": {
-    "remark": "^15.0.1"
+    "remark": "^15.0.1",
+    "remark-mdx": "^3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "remark-mdx": {
+      "optional": true
+    }
   },
   "engines": {
-    "node": ">=22.x"
+    "node": ">=24.x"
   }
 }

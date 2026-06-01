@@ -119,8 +119,8 @@ Transforms MDD semantic directives into LaTeX-style markup that preserves docume
 - `::footer ... ::` - Page footer
 - `::contact-info ... ::` - Contact details block
 - `::signature-block ... ::` - Signature lines
-- `::page-break ::` - Force page break
-- `::: section-break :::` - Section divider
+- `::page-break ::` or block form `::page-break` / `::` - Force page break
+- `::: section-break :::` or block form `::: section-break` / `:::` - Section divider
 
 **Example:**
 

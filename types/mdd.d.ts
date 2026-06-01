@@ -25,8 +25,10 @@ export type DirectiveType =
 export type DocumentType =
   | 'business-letter'
   | 'invoice'
+  | 'business-proposal'
   | 'proposal'
   | 'contract'
+  | 'legal-contract'
   | 'agreement'
   | 'memorandum'
   | 'memo'
@@ -96,6 +98,7 @@ export type SemanticClass =
   | 'subsection'
   | 'section-title'
   | 'important'
+  | 'emphasis'
   | 'warning'
   | 'note'
   | 'example'

@@ -61,6 +61,7 @@ export default function remarkMddTextFormatting() {
 
       // Check if text contains any formatting
       for (const pattern of Object.values(TEXT_PATTERNS)) {
+        pattern.lastIndex = 0
         if (pattern.test(originalText)) {
           hasFormatting = true
           break
@@ -220,9 +221,10 @@ function createFormattedNode(formatMatch) {
       }
 
     case 'quote':
+      // Convert straight quotes to professional typographic (curly) quotes.
       return {
         type: 'text',
-        value: `"${formatMatch.content}"`, // Use proper typography quotes
+        value: `“${formatMatch.content}”`,
       }
 
     default:
@@ -242,8 +244,8 @@ function processHeadingStructure(tree) {
   visit(tree, 'heading', (node) => {
     const level = node.depth
 
-    // Reset counters for deeper levels
-    for (let i = level; i < sectionCounters.length; i++) {
+    // Increment this level's counter and reset all deeper levels.
+    for (let i = level - 1; i < sectionCounters.length; i++) {
       if (i === level - 1) {
         sectionCounters[i]++
       } else {

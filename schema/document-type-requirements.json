@@ -44,7 +44,27 @@
       }
     },
 
+    "business-proposal": {
+      "requiredDirectives": ["letterhead"],
+      "recommendedDirectives": ["header", "footer", "signature-block"],
+      "requiredMetadata": ["title", "date", "document-type"],
+      "recommendedMetadata": ["author", "recipient", "version", "status", "reference-number"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
     "contract": {
+      "requiredDirectives": ["letterhead", "signature-block"],
+      "recommendedDirectives": ["header", "footer"],
+      "requiredMetadata": ["title", "date", "document-type", "parties", "effective-date"],
+      "recommendedMetadata": ["jurisdiction", "expiration-date", "reference-number", "version"],
+      "maxDirectiveOccurrences": {
+        "letterhead": 1
+      }
+    },
+
+    "legal-contract": {
       "requiredDirectives": ["letterhead", "signature-block"],
       "recommendedDirectives": ["header", "footer"],
       "requiredMetadata": ["title", "date", "document-type", "parties", "effective-date"],

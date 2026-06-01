@@ -28,10 +28,12 @@ const STRUCTURE_PATTERNS = {
   letterhead: /^::letterhead$/,
   signatureBlock: /^::signature-block$/,
   pageBreak: /^::page-break$/,
+  pageBreakInline: /^::page-break\s*::$/,
   header: /^::header$/,
   footer: /^::footer$/,
   contactInfo: /^::contact-info$/,
   sectionBreak: /^::: section-break$/,
+  sectionBreakInline: /^:::\s*section-break\s*:::$/,
   directiveEnd: /^::$/,
   sectionEnd: /^:::$/,
 }
@@ -82,6 +84,28 @@ function processDocumentStructure(tree) {
     const text = allText.trim()
     const firstLine = text.split('\n')[0].trim()
     const lastLine = text.split('\n').pop().trim()
+
+    if (STRUCTURE_PATTERNS.pageBreakInline.test(text)) {
+      structureElements.push({
+        type: 'pageBreak',
+        node,
+        index,
+        parent,
+        text: allText,
+      })
+      return
+    }
+
+    if (STRUCTURE_PATTERNS.sectionBreakInline.test(text)) {
+      structureElements.push({
+        type: 'sectionBreak',
+        node,
+        index,
+        parent,
+        text: allText,
+      })
+      return
+    }
 
     // Check for start markers (::letterhead, ::header, etc)
     for (const [type, pattern] of Object.entries(STRUCTURE_PATTERNS)) {
@@ -177,7 +201,7 @@ function getEndMarkerType(startType) {
     case 'sectionBreak':
       return 'sectionEnd'
     case 'pageBreak':
-      return null // No end marker needed
+      return 'directiveEnd'
     default:
       return null
   }
@@ -191,7 +215,7 @@ function createDocumentElement(startElement, endElement) {
 
   switch (type) {
     case 'pageBreak':
-      createPageBreak(startElement)
+      createPageBreak(startElement, endElement)
       break
 
     case 'letterhead':
@@ -223,11 +247,15 @@ function createDocumentElement(startElement, endElement) {
 /**
  * Create page break element
  */
-function createPageBreak(element) {
+function createPageBreak(startElement, endElement) {
   // Replace with pandoc-compatible page break
-  element.parent.children[element.index] = {
+  startElement.parent.children[startElement.index] = {
     type: 'html',
     value: '\\newpage',
+  }
+
+  if (endElement && endElement !== startElement) {
+    endElement.parent.children.splice(endElement.index, 1)
   }
 }
 
@@ -321,16 +349,15 @@ function createContactInfo(startElement, endElement) {
  * Create section break
  */
 function createSectionBreak(startElement, endElement) {
-  if (!endElement) return
-
   // Simple section break marker
   startElement.parent.children[startElement.index] = {
     type: 'html',
     value: '\\sectionbreak',
   }
 
-  // Remove end marker
-  endElement.parent.children.splice(endElement.index, 1)
+  if (endElement && endElement !== startElement) {
+    endElement.parent.children.splice(endElement.index, 1)
+  }
 }
 
 /**
