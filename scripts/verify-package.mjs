@@ -85,7 +85,10 @@ try {
     encoding: 'utf8',
   }).trim()
 
-  const tarballName = packOutput.split('\n').filter(Boolean).at(-1).trim()
+  const tarballName = packOutput
+    .split('\n')
+    .findLast((line) => line.trim() !== '')
+    .trim()
   const tarballPath = path.isAbsolute(tarballName)
     ? tarballName
     : path.join(tmpDir, path.basename(tarballName))
