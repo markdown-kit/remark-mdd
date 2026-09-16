@@ -48,11 +48,15 @@ date: "2026-03-28"
 })
 
 test('self-closing directives do not emit empty-directive warnings', () => {
-  const validation = validateDirectives(
-    extractDirectives('::page-break ::\n::: section-break :::\n'),
-  )
-
+  const validation = validateDirectives(extractDirectives('::page-break\n\n::section-break\n'))
   assert.equal(validation.warnings.length, 0)
+
+  // The MDD 2 spelling warns once per directive about the spelling, nothing else.
+  const legacy = validateDirectives(extractDirectives('::page-break ::\n::: section-break :::\n'))
+  assert.deepEqual(
+    legacy.warnings.map((warning) => warning.code),
+    ['LEGACY_DIRECTIVE_SYNTAX', 'LEGACY_DIRECTIVE_SYNTAX'],
+  )
 })
 
 test('business-proposal uses the same requirement set as proposal', () => {
@@ -69,7 +73,7 @@ author: "Consultant"
   assert.equal(result.valid, false)
   assert.ok(result.errors.some((error) => error.code === 'MISSING_REQUIRED_DIRECTIVE'))
   assert.ok(
-    result.errors.some((error) => error.message.includes('requires ::letterhead directive')),
+    result.errors.some((error) => error.message.includes('requires the :::letterhead directive')),
   )
 })
 
@@ -85,7 +89,7 @@ date: "2026-03-28"
 
   assert.equal(result.valid, false)
   assert.ok(
-    result.errors.some((error) => error.message.includes('requires ::letterhead directive')),
+    result.errors.some((error) => error.message.includes('requires the :::letterhead directive')),
   )
   assert.ok(result.errors.some((error) => error.location?.field === 'parties'))
   assert.ok(result.errors.some((error) => error.location?.field === 'effective-date'))

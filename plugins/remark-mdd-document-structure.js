@@ -1,6 +1,13 @@
 /**
  * Preserve MDD document directives as semantic HTML containers without
  * flattening the Markdown AST contained by each directive.
+ *
+ * Two inputs are understood. When the processor runs remark-directive, the
+ * canonical `:::letterhead … :::` blocks and `::page-break` / `::section-break`
+ * leaves arrive as directive nodes and are mapped straight to containers.
+ * Without it, this plugin scans paragraphs for the same canonical lines, and
+ * still reads the MDD 2 spelling (`::letterhead … ::`, `::page-break ::`,
+ * `::: section-break :::`), which is accepted for one more major version.
  */
 
 import { visit } from 'unist-util-visit'
@@ -58,7 +65,7 @@ function cloneWithoutOpeningMarker(node, directive) {
   const clone = structuredClone(node)
   const first = textLeaves(clone)[0]
   if (first) {
-    first.value = first.value.replace(new RegExp(`^::${directive}(?:\\r?\\n|$)`, 'u'), '')
+    first.value = first.value.replace(new RegExp(`^:{2,3}${directive}(?:\\r?\\n|$)`, 'u'), '')
   }
   removeEmptyTextLeaves(clone)
   return clone
@@ -69,11 +76,11 @@ function cloneWithoutOpeningMarker(node, directive) {
  * This mirrors the validator, which recognises an end marker solely on its own
  * line; text that merely ends in `::` (e.g. `Time: 10::`) is directive content.
  */
-function closesDirective(node) {
-  return /(?:^|\r?\n)::\s*$/u.test(nodeText(node).trimEnd())
+function closesDirective(node, marker) {
+  return new RegExp(`(?:^|\\r?\\n)${marker}\\s*$`, 'u').test(nodeText(node).trimEnd())
 }
 
-function cloneWithoutEndMarker(node, marker = '::') {
+function cloneWithoutEndMarker(node, marker) {
   const clone = structuredClone(node)
   const leaves = textLeaves(clone)
   const last = leaves.at(-1)
@@ -157,6 +164,21 @@ function sectionBreakNode() {
   }
 }
 
+/** remark-directive nodes: the canonical MDD 3 form, already parsed. */
+function fromDirectiveNode(node) {
+  if (node.type === 'leafDirective') {
+    if (node.name === 'page-break') return pageBreakNode()
+    if (node.name === 'section-break') return sectionBreakNode()
+    return null
+  }
+  if (node.type === 'containerDirective') {
+    const className = BLOCK_DIRECTIVES.get(node.name)
+    if (!className) return null
+    return semanticContainer(className, structuredClone(node.children))
+  }
+  return null
+}
+
 function processDocumentStructure(tree) {
   if (!Array.isArray(tree.children)) {
     return
@@ -167,12 +189,20 @@ function processDocumentStructure(tree) {
 
   for (let index = 0; index < input.length; index++) {
     const node = input[index]
+    const fromNode = fromDirectiveNode(node)
+    if (fromNode) {
+      output.push(fromNode)
+      continue
+    }
     if (node.type !== 'paragraph') {
       output.push(node)
       continue
     }
 
     const text = nodeText(node).trim()
+    // Self-closing directives: `::page-break` and `::section-break` are the
+    // canonical lines; `::page-break ::`, `::: section-break :::` and their
+    // block forms with a closer on the next line are the MDD 2 spelling.
     if (/^::page-break(?:\s*::)?$/u.test(text)) {
       output.push(pageBreakNode())
       if (text === '::page-break' && nodeText(input[index + 1] ?? {}).trim() === '::') {
@@ -180,27 +210,29 @@ function processDocumentStructure(tree) {
       }
       continue
     }
-    if (/^:::\s*section-break(?:\s*:::)?$/u.test(text)) {
+    if (/^::section-break$/u.test(text) || /^:::\s*section-break(?:\s*:::)?$/u.test(text)) {
       output.push(sectionBreakNode())
-      if (text === '::: section-break' && nodeText(input[index + 1] ?? {}).trim() === ':::') {
+      if (/^:::\s*section-break$/u.test(text) && nodeText(input[index + 1] ?? {}).trim() === ':::') {
         index++
       }
       continue
     }
 
     const firstLine = nodeText(node).split(/\r?\n/u)[0].trim()
-    const opener = firstLine.match(/^::([a-z][a-z0-9-]*)$/u)
-    const className = opener ? BLOCK_DIRECTIVES.get(opener[1]) : null
+    const opener = firstLine.match(/^(:{2,3})([a-z][a-z0-9-]*)$/u)
+    const className = opener ? BLOCK_DIRECTIVES.get(opener[2]) : null
     if (!opener || !className) {
       output.push(node)
       continue
     }
 
-    const directive = opener[1]
+    const directive = opener[2]
+    // A `:::name` block closes with `:::`; the MDD 2 `::name` block with `::`.
+    const marker = opener[1]
     const children = []
     const openingContent = cloneWithoutOpeningMarker(node, directive)
-    if (closesDirective(openingContent)) {
-      pushUnlessEmpty(children, cloneWithoutEndMarker(openingContent))
+    if (closesDirective(openingContent, marker)) {
+      pushUnlessEmpty(children, cloneWithoutEndMarker(openingContent, marker))
       output.push(semanticContainer(className, children))
       continue
     }
@@ -209,8 +241,8 @@ function processDocumentStructure(tree) {
     let closed = false
     for (let cursor = index + 1; cursor < input.length; cursor++) {
       const contentNode = input[cursor]
-      if (contentNode.type === 'paragraph' && closesDirective(contentNode)) {
-        pushUnlessEmpty(children, cloneWithoutEndMarker(contentNode))
+      if (contentNode.type === 'paragraph' && closesDirective(contentNode, marker)) {
+        pushUnlessEmpty(children, cloneWithoutEndMarker(contentNode, marker))
         index = cursor
         closed = true
         break
@@ -253,9 +285,18 @@ function processSemanticClasses(tree) {
 
 export function hasDocumentStructure(tree) {
   let hasStructure = false
-  visit(tree, 'paragraph', (node) => {
+  visit(tree, ['paragraph', 'containerDirective', 'leafDirective'], (node) => {
+    if (node.type !== 'paragraph') {
+      if (BLOCK_DIRECTIVES.has(node.name) || node.name === 'page-break' || node.name === 'section-break')
+        hasStructure = true
+      return
+    }
     const text = nodeText(node).trim()
-    if (/^::(?:letterhead|signature-block|header|footer|contact-info|page-break)\b/u.test(text)) {
+    if (
+      /^:{2,3}(?:letterhead|signature-block|header|footer|contact-info|page-break|section-break)\b/u.test(
+        text,
+      )
+    ) {
       hasStructure = true
     }
     if (/^:::\s*section-break\b/u.test(text)) {

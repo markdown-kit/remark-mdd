@@ -247,7 +247,7 @@ export interface ValidationError {
   /** Severity level */
   type: ValidationSeverity
 
-  /** Error code (e.g., MISSING_END_MARKER, INVALID_DATE_FORMAT) */
+  /** Error code (e.g., MISSING_END_MARKER, LEGACY_DIRECTIVE_SYNTAX, INVALID_DATE_FORMAT) */
   code: string
 
   /** Human-readable error message */
@@ -298,6 +298,8 @@ export interface DirectiveOccurrence {
 
   /** Whether directive has proper end marker */
   hasEndMarker: boolean
+  /** True when the directive was written in the MDD 2 spelling (`::name` … `::`). */
+  legacy: boolean
 
   /** Column number where directive starts (1-indexed) */
   column?: number

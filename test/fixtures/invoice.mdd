@@ -1,0 +1,89 @@
+---
+title: "Invoice #INV-2024-1047"
+date: "2024-12-15"
+document-type: "invoice"
+invoice-number: "INV-2024-1047"
+---
+
+:::header
+ACME Services Inc. | INVOICE
+:::
+
+:::letterhead
+ACME Services Inc.
+123 Business Street, Suite 200
+San Francisco, CA 94102
+Phone: (415) 555-0100
+Email: <billing@acmeservices.com>
+Tax ID: 94-1234567
+:::
+
+# INVOICE
+
+**Invoice Number:** INV-2024-1047
+**Invoice Date:** December 15, 2024
+**Due Date:** January 14, 2025
+**Payment Terms:** Net 30
+
+**Bill To:**
+TechCorp International
+Attn: Accounts Payable
+456 Innovation Drive
+Austin, TX 78701
+
+**Project:** Website Redesign & Development
+**Purchase Order:** PO-2024-8823
+
+## Services Rendered
+
+| Description               | Quantity | Rate             | Amount         |
+| ------------------------- | -------- | ---------------- | -------------- |
+| UX/UI Design              | 40 hrs   | $150.00          | $6,000.00      |
+| Frontend Development      | 80 hrs   | $125.00          | $10,000.00     |
+| Backend Development       | 60 hrs   | $125.00          | $7,500.00      |
+| Content Migration         | 20 hrs   | $100.00          | $2,000.00      |
+| Quality Assurance Testing | 24 hrs   | $100.00          | $2,400.00      |
+| Project Management        | 16 hrs   | $175.00          | $2,800.00      |
+|                           |          | **SUBTOTAL**     | **$30,700.00** |
+|                           |          | Sales Tax (8.5%) | $2,609.50      |
+|                           |          | **TOTAL DUE**    | **$33,309.50** |
+
+## Payment Information
+
+Please remit payment to:
+
+:::contact-info
+**Wire Transfer:**
+Bank: First National Bank
+Account Number: 1234567890
+Routing Number: 121000248
+SWIFT: FNANBUS4XXX
+
+**Check Payment:**
+ACME Services Inc.
+PO Box 12345
+San Francisco, CA 94102
+
+**Online Payment:**
+Visit: payments.acmeservices.com
+Reference: INV-2024-1047
+:::
+
+> **Important:** Please include invoice number INV-2024-1047 with your payment.
+
+## Notes
+
+Thank you for your business! This invoice covers work completed from November 1 through
+December 15, 2024. All milestones have been delivered and approved as per the Statement
+of Work dated October 15, 2024.
+
+**Questions about this invoice?** Contact our billing department at (415) 555-0101 or
+<billing@acmeservices.com>
+
+:::footer
+ACME Services Inc. | Page {{page}} | Questions? Call (415) 555-0100
+:::
+
+---
+
+_Payment is due within 30 days. Late payments subject to 1.5% monthly interest charge._

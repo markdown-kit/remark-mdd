@@ -46,10 +46,10 @@ const processor = remark()
   .use(remarkHtml, { sanitize: false });
 
 const result = await processor.process(`
-::letterhead
+:::letterhead
 ACME Corporation
 123 Business Ave
-::
+:::
 
 # Invoice
 
@@ -113,22 +113,24 @@ Transforms MDD semantic directives into LaTeX-style markup that preserves docume
 
 **Supported directives:**
 
-- `::letterhead ... ::` - Company/organization header
-- `::header ... ::` - Page header
-- `::footer ... ::` - Page footer
-- `::contact-info ... ::` - Contact details block
-- `::signature-block ... ::` - Signature lines
-- `::page-break ::` or block form `::page-break` / `::` - Force page break
-- `::: section-break :::` or block form `::: section-break` / `:::` - Section divider
+- `:::letterhead … :::` - Company/organization header
+- `:::header … :::` - Page header
+- `:::footer … :::` - Page footer
+- `:::contact-info … :::` - Contact details block
+- `:::signature-block … :::` - Signature lines
+- `::page-break` - Force page break
+- `::section-break` - Section divider
+
+This is the [remark-directive](https://github.com/remarkjs/remark-directive) grammar: a block is `:::name` … `:::`, a self-closing directive is `::name`. Files in the MDD 2 spelling (`::name` … `::`, `::page-break ::`, `::: section-break :::`) are still read, with a `LEGACY_DIRECTIVE_SYNTAX` warning; `mdd-migrate` from `@markdownkit/mdd` rewrites them. The old spelling is removed in the next major version.
 
 **Example:**
 
 ```markdown
-::letterhead
+:::letterhead
 ACME Corporation
 123 Business Avenue
 San Francisco, CA 94102
-::
+:::
 
 # Business Proposal
 ```

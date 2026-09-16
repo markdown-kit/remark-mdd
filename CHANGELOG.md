@@ -4,6 +4,17 @@ All notable changes to @markdownkit/remark-mdd.
 
 ## [Unreleased]
 
+### Changed
+
+- **MDD 3 directive syntax.** A block directive is written `:::letterhead` … `:::` and a self-closing one `::page-break` / `::section-break`: the remark-directive grammar, so any remark-directive pipeline (notdocs, docs sites) parses MDD without this package's paragraph scanner, and a document round-trips through such a pipeline byte for byte. The structure plugin maps `containerDirective` and `leafDirective` nodes straight to semantic containers when remark-directive runs before it, and still scans paragraphs when it does not.
+- **The MDD 2 spelling is read for one more major version.** `::name` … `::`, `::page-break ::`, `::: section-break :::` and their block forms parse as before; the validator reports each with a `LEGACY_DIRECTIVE_SYNTAX` warning that points at `mdd-migrate`. A canonical `:::name` block is not closed by a legacy `::` and vice versa.
+- Validation messages spell directives the MDD 3 way (`:::letterhead`, `::page-break`).
+
+### Added
+
+- `LEGACY_DIRECTIVE_SYNTAX` error code (a warning).
+- The four example documents from `@markdownkit/mdd` in canonical syntax as test fixtures, checked to validate clean.
+
 ## [3.0.0] - 2026-09-08
 
 ### Added
