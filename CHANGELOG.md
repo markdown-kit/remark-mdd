@@ -4,6 +4,10 @@ All notable changes to @markdownkit/remark-mdd.
 
 ## [Unreleased]
 
+### Added
+
+- **Four more document statuses.** `status` also accepts `review` (a draft under review), and `sent`, `accepted` and `declined` for a document that went to its recipient, such as a proposal or a quote. A notdocs proposal marked `sent` validated as an `INVALID_STATUS` error before. The schema, the validator's fallback list and the `DocumentStatus` type carry the same nine values.
+
 ## [4.0.0] - 2026-09-16
 
 ### Changed

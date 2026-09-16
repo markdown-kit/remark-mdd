@@ -77,6 +77,32 @@ author: "Consultant"
   )
 })
 
+test('status accepts the sent and review lifecycles and still rejects an unknown value', () => {
+  const proposal = (status) => `---
+title: "Proposal"
+document-type: "proposal"
+date: "2026-03-28"
+status: "${status}"
+---
+
+:::letterhead
+Acme
+:::
+
+# Proposal
+`
+  for (const status of ['review', 'sent', 'accepted', 'declined']) {
+    const result = validateDocument(proposal(status))
+    assert.equal(
+      result.errors.some((error) => error.code === 'INVALID_STATUS'),
+      false,
+      status,
+    )
+  }
+  const unknown = validateDocument(proposal('shipped'))
+  assert.ok(unknown.errors.some((error) => error.code === 'INVALID_STATUS'))
+})
+
 test('legal-contract enforces required directives and metadata', () => {
   const result = validateDocument(`---
 title: "Legal Contract"

@@ -134,7 +134,16 @@ export type SemanticClass =
 /**
  * Document status
  */
-export type DocumentStatus = 'draft' | 'final' | 'approved' | 'pending' | 'archived'
+export type DocumentStatus =
+  | 'draft'
+  | 'review'
+  | 'pending'
+  | 'approved'
+  | 'final'
+  | 'sent'
+  | 'accepted'
+  | 'declined'
+  | 'archived'
 
 /**
  * MDD document frontmatter metadata

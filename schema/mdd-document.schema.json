@@ -99,8 +99,18 @@
         },
         "status": {
           "type": "string",
-          "enum": ["draft", "final", "approved", "pending", "archived"],
-          "description": "Document status"
+          "enum": [
+            "draft",
+            "review",
+            "pending",
+            "approved",
+            "final",
+            "sent",
+            "accepted",
+            "declined",
+            "archived"
+          ],
+          "description": "Document status: the drafting lifecycle (draft, review, pending, approved, final), the fate of a document that was sent (sent, accepted, declined), and archived"
         },
         "confidential": {
           "type": "boolean",
