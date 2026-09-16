@@ -4,6 +4,8 @@ All notable changes to @markdownkit/remark-mdd.
 
 ## [Unreleased]
 
+## [4.0.0] - 2026-09-16
+
 ### Changed
 
 - **MDD 3 directive syntax.** A block directive is written `:::letterhead` … `:::` and a self-closing one `::page-break` / `::section-break`: the remark-directive grammar, so any remark-directive pipeline (notdocs, docs sites) parses MDD without this package's paragraph scanner, and a document round-trips through such a pipeline byte for byte. The structure plugin maps `containerDirective` and `leafDirective` nodes straight to semantic containers when remark-directive runs before it, and still scans paragraphs when it does not.
@@ -103,3 +105,9 @@ import remarkMddDocumentStructure from "@markdownkit/remark-mdd/plugins/document
 ### Breaking Changes
 
 None - this is a new package extracted from the main MDD package.
+
+[Unreleased]: https://github.com/entro314-labs/remark-mdd/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/entro314-labs/remark-mdd/compare/v3.0.0...v4.0.0
+[3.0.0]: https://github.com/entro314-labs/remark-mdd/compare/v2.2.3...v3.0.0
+[2.2.3]: https://github.com/entro314-labs/remark-mdd/compare/v0.1.0...v2.2.3
+[0.1.0]: https://github.com/entro314-labs/remark-mdd/releases/tag/v0.1.0
