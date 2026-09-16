@@ -1,6 +1,6 @@
 {
   "name": "@markdownkit/remark-mdd",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Remark plugins and validation for MDD (Markdown Document) format - semantic document layer for professional business documents",
   "keywords": [
     "business-documents",

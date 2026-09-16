@@ -4,6 +4,8 @@ All notable changes to @markdownkit/remark-mdd.
 
 ## [Unreleased]
 
+## [4.1.0] - 2026-09-16
+
 ### Added
 
 - **Four more document statuses.** `status` also accepts `review` (a draft under review), and `sent`, `accepted` and `declined` for a document that went to its recipient, such as a proposal or a quote. A notdocs proposal marked `sent` validated as an `INVALID_STATUS` error before. The schema, the validator's fallback list and the `DocumentStatus` type carry the same nine values.
@@ -110,7 +112,8 @@ import remarkMddDocumentStructure from "@markdownkit/remark-mdd/plugins/document
 
 None - this is a new package extracted from the main MDD package.
 
-[Unreleased]: https://github.com/entro314-labs/remark-mdd/compare/v4.0.0...HEAD
+[Unreleased]: https://github.com/entro314-labs/remark-mdd/compare/v4.1.0...HEAD
+[4.1.0]: https://github.com/entro314-labs/remark-mdd/compare/v4.0.0...v4.1.0
 [4.0.0]: https://github.com/entro314-labs/remark-mdd/compare/v3.0.0...v4.0.0
 [3.0.0]: https://github.com/entro314-labs/remark-mdd/compare/v2.2.3...v3.0.0
 [2.2.3]: https://github.com/entro314-labs/remark-mdd/compare/v0.1.0...v2.2.3
