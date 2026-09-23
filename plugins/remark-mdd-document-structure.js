@@ -273,7 +273,7 @@ function processSemanticClasses(tree) {
       return
     }
 
-    const classMatch = last.value.match(/^(.*?)\s*\{\.([^}]+)\}\s*$/u)
+    const classMatch = last.value.match(/^([\s\S]*?)\s*\{\.([^}]+)\}\s*$/u)
     if (!classMatch) {
       return
     }

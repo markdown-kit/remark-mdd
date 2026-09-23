@@ -47,6 +47,23 @@ test('semantic classes retain the original heading element', async () => {
   assert.equal(heading.children[0].value, 'Invoice')
 })
 
+test('a semantic class applies to a paragraph that wraps onto several lines', async () => {
+  const wrapped = await transform(
+    'Line one of a wrapped paragraph\nline two. {.legal-notice}\n',
+    remarkMddDocumentStructure,
+  )
+  assert.deepEqual(wrapped.children[0].data?.hProperties?.className, ['legal-notice'])
+  assert.equal(wrapped.children[0].children[0].value, 'Line one of a wrapped paragraph\nline two.')
+
+  // The SPECIFICATION example: two annotated lines form one Markdown paragraph.
+  const spec = await transform(
+    'Important legal text. {.legal-notice}\nHighlighted information. {.emphasis}\n',
+    remarkMddDocumentStructure,
+  )
+  assert.deepEqual(spec.children[0].data?.hProperties?.className, ['emphasis'])
+  assert.doesNotMatch(spec.children[0].children[0].value, /\{\.emphasis\}/u)
+})
+
 test('standalone typography tokens are transformed', async () => {
   const superscript = await transform('^2^\n', remarkMddTextFormatting)
   assert.equal(superscript.children[0].children[0].type, 'html')
