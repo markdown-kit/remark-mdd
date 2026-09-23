@@ -13,6 +13,7 @@ All notable changes to @markdownkit/remark-mdd.
 - **Directive lines in an indented code block are code.** A line indented four spaces or a tab that starts a block (after a blank line, a heading, a rule or a fence) is an indented code block to Markdown, but the validator counted `:::letterhead` or `::page-break` in it as a directive, and an indented `:::` inside a block as its closer.
 - **A `{.class}` annotation applies to a paragraph that wraps onto several lines.** It was only recognised when the whole paragraph was one line, so the SPECIFICATION example (two annotated lines, which Markdown joins into one paragraph) rendered the annotations as text. The trailing annotation now sets the paragraph's class.
 - **Messages about an MDD 2 block name its own end marker.** The nesting error told a `::letterhead` block to close with `:::`, which does not close it; it now says `::`. Messages that point at a line (nesting, missing end marker, empty directive, block start/end) spell an MDD 2 opener as written (`::letterhead`), and the directive-order warning uses the MDD 3 spelling (`:::signature-block … :::letterhead`).
+- **Only `@section-N`, `@table-N` and `@figure-N` become reference links, and never inside a link.** Any `@word-N` was linked, so an e-mail address such as `sales@acme-2024.com` rendered as an anchor nested in its own `mailto:` link, and handles like `@user-1` became links to nothing. Text inside a link keeps its superscript/subscript typography but no longer gets reference links.
 
 ## [4.1.0] - 2026-09-16
 

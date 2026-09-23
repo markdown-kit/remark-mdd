@@ -64,6 +64,30 @@ test('a semantic class applies to a paragraph that wraps onto several lines', as
   assert.doesNotMatch(spec.children[0].children[0].value, /\{\.emphasis\}/u)
 })
 
+test('only @section/@table/@figure refs link, and never inside an existing link', async () => {
+  const tree = await transform(
+    'Write to sales@acme-2024.com or billing@section-2.com, ping @user-1 about @page-3, see @section-1 and [@table-1 x^2^](https://example.com).\n',
+    { plugins: [remarkGfm, remarkMddTextFormatting] },
+  )
+  const links = []
+  const collect = (node, depth) => {
+    if (node.type === 'link') links.push({ url: node.url, depth })
+    for (const child of node.children ?? []) collect(child, depth + (node.type === 'link' ? 1 : 0))
+  }
+  collect(tree, 0)
+  assert.deepEqual(links, [
+    { url: 'mailto:sales@acme-2024.com', depth: 0 },
+    { url: 'mailto:billing@section-2.com', depth: 0 },
+    { url: '#section-1', depth: 0 },
+    { url: 'https://example.com', depth: 0 },
+  ])
+  const label = tree.children[0].children.at(-2).children
+  assert.deepEqual(
+    label.map((n) => n.value),
+    ['@table-1 x', '<sup>2</sup>'],
+  )
+})
+
 test('standalone typography tokens are transformed', async () => {
   const superscript = await transform('^2^\n', remarkMddTextFormatting)
   assert.equal(superscript.children[0].children[0].type, 'html')

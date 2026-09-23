@@ -34,7 +34,7 @@ const TEXT_PATTERNS = {
   subscript: /~([^~\s]+)~/g,
 
   // Internal references: @section-1, @table-2, @figure-3
-  internalRef: /@([a-z]+)-(\d+)/g,
+  internalRef: /@(section|table|figure)-(\d+)/g,
 
   // Quote typography: "text" -> proper quotes
   quotes: /"([^"]+)"/g,
@@ -89,21 +89,26 @@ function processReferenceTargets(tree) {
   })
 }
 
-function transformTextNodes(node) {
+/**
+ * Text inside a link is its label (or an autolinked address such as
+ * sales@section-2.com), so references there stay text: a reference link
+ * inside a link would nest anchors. Typography still applies.
+ */
+function transformTextNodes(node, inLink = false) {
   if (!Array.isArray(node.children)) {
     return
   }
 
   node.children = node.children.flatMap((child) => {
     if (child.type !== 'text' || !child.value) {
-      transformTextNodes(child)
+      transformTextNodes(child, inLink || child.type === 'link' || child.type === 'linkReference')
       return [child]
     }
 
-    for (const pattern of Object.values(TEXT_PATTERNS)) {
+    for (const [name, pattern] of Object.entries(TEXT_PATTERNS)) {
       pattern.lastIndex = 0
-      if (pattern.test(child.value)) {
-        return processTextFormatting(child.value)
+      if (!(inLink && name === 'internalRef') && pattern.test(child.value)) {
+        return processTextFormatting(child.value, inLink)
       }
     }
     return [child]
@@ -113,7 +118,7 @@ function transformTextNodes(node) {
 /**
  * Process text formatting and return array of nodes
  */
-function processTextFormatting(text) {
+function processTextFormatting(text, inLink) {
   for (const pattern of Object.values(TEXT_PATTERNS)) {
     pattern.lastIndex = 0
   }
@@ -147,7 +152,7 @@ function processTextFormatting(text) {
   }
 
   // Find internal references
-  for (const match of workingText.matchAll(TEXT_PATTERNS.internalRef)) {
+  for (const match of inLink ? [] : workingText.matchAll(TEXT_PATTERNS.internalRef)) {
     allMatches.push({
       type: 'internalRef',
       match,
