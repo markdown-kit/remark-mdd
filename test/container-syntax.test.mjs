@@ -322,3 +322,18 @@ test('directive lines in an indented code block are code, not directives', async
     assert.deepEqual(containers(await run(body)), rendered, `${name}: scanner`)
   }
 })
+
+test('a legacy ::page-break closed by :: after blank lines is one legacy page break', async () => {
+  for (const body of ['::page-break\n\n::\n\nBody.\n', '::page-break\n\n\n::\n']) {
+    const result = validateDocument(FRONTMATTER + body)
+    assert.deepEqual(result.errors, [], body)
+    assert.deepEqual(
+      result.warnings.map((w) => w.code),
+      ['LEGACY_DIRECTIVE_SYNTAX'],
+      body,
+    )
+    const tree = await run(body)
+    assert.deepEqual(containers(tree), ['page-break'], body)
+    assert.deepEqual(literalDirectiveLines(tree), [], body)
+  }
+})
