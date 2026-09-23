@@ -8,6 +8,10 @@ All notable changes to @markdownkit/remark-mdd.
 
 - **`DIRECTIVE_NOT_BLOCK_END` validation error; documents that validated before can now fail.** The paragraph scanner that renders MDD without remark-directive (`mdd` preview and convert, the language server) only ends a directive where its closer, or a `::page-break` / `::section-break`, is the last line of a paragraph. The validator now rejects the two cases it accepted but the renderer could not render: a non-blank line directly after a closer or self-closing directive (other than an ATX heading, a `***` / `___` rule or a fence delimiter), which folded the directive into paragraph text; and a closer directly after a list item, table row or blockquote line (including their lazy continuation lines), which became list, table or quote text and left the directive open. Both are fixed by a blank line, as the message says.
 
+### Fixed
+
+- **Directive lines in an indented code block are code.** A line indented four spaces or a tab that starts a block (after a blank line, a heading, a rule or a fence) is an indented code block to Markdown, but the validator counted `:::letterhead` or `::page-break` in it as a directive, and an indented `:::` inside a block as its closer.
+
 ## [4.1.0] - 2026-09-16
 
 ### Added

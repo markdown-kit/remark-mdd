@@ -267,3 +267,29 @@ test('DIRECTIVE_NOT_BLOCK_END says where the blank line goes', () => {
   assert.match(before.message, /list item/u)
   assert.match(before.suggestion, /blank line before/u)
 })
+
+// [case, body, directives the scanner renders]
+const INDENTED_CASES = [
+  [
+    'indented code after a blank line',
+    'Example:\n\n    :::letterhead\n    ACME\n    :::\n\nEnd.\n',
+    [],
+  ],
+  ['tab-indented code', 'Example:\n\n\t::page-break\n', []],
+  ['indented code after a heading', '# Title\n    ::page-break\n', []],
+  ['indented code inside a block', ':::letterhead\nACME\n\n    :::\n\n:::\n', ['letterhead']],
+  ['indented closer continuing a paragraph', ':::letterhead\nACME\n    :::\n', ['letterhead']],
+]
+
+test('directive lines in an indented code block are code, not directives', async () => {
+  for (const [name, body, rendered] of INDENTED_CASES) {
+    const result = validateDocument(FRONTMATTER + body)
+    assert.deepEqual(result.errors, [], `${name}: errors`)
+    assert.deepEqual(
+      result.directives.map((d) => d.type),
+      rendered,
+      `${name}: validator`,
+    )
+    assert.deepEqual(containers(await run(body)), rendered, `${name}: scanner`)
+  }
+})
