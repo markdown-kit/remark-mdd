@@ -123,6 +123,8 @@ Transforms MDD semantic directives into LaTeX-style markup that preserves docume
 
 This is the [remark-directive](https://github.com/remarkjs/remark-directive) grammar: a block is `:::name` … `:::`, a self-closing directive is `::name`. Files in the MDD 2 spelling (`::name` … `::`, `::page-break ::`, `::: section-break :::`) are still read, with a `LEGACY_DIRECTIVE_SYNTAX` warning; `mdd-migrate` from `@markdownkit/mdd` rewrites them. The old spelling is removed in the next major version.
 
+Without remark-directive the plugin scans paragraphs, so each directive has to be its own Markdown block: put a blank line before an opener and after a closer or self-closing directive (a heading, a fence delimiter or a `***` rule also works). The validator reports a directive the scanner cannot see as `DIRECTIVE_NOT_BLOCK_START` or `DIRECTIVE_NOT_BLOCK_END`.
+
 **Example:**
 
 ```markdown

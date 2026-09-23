@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url'
 import { remark } from 'remark'
 import remarkDirective from 'remark-directive'
 import remarkGfm from 'remark-gfm'
+import { visit } from 'unist-util-visit'
 
 import { extractDirectives, validateDirectives, validateDocument } from '../lib/validator.js'
 import remarkMddDocumentStructure, {
@@ -19,6 +20,17 @@ function containers(tree) {
   return tree.children
     .filter((node) => node.data?.hProperties?.['data-mdd-directive'])
     .map((node) => node.data.hProperties['data-mdd-directive'])
+}
+
+/** Directive lines the scanner left in the output as literal text. */
+function literalDirectiveLines(tree) {
+  const lines = []
+  visit(tree, 'text', (node) => {
+    for (const line of node.value.split(/\r?\n/u)) {
+      if (/^\s*:{2,3}\s*[a-z-]*\s*(?::{2,3})?\s*$/u.test(line)) lines.push(line.trim())
+    }
+  })
+  return lines
 }
 
 async function run(markdown, { directive = false } = {}) {
@@ -190,4 +202,68 @@ test('a container the plugin does not know is left to the pipeline', async () =>
   const tree = await run(':::note\nHi\n:::\n', { directive: true })
   assert.equal(tree.children[0].type, 'containerDirective')
   assert.equal(hasDocumentStructure(tree), false)
+})
+
+const FRONTMATTER = '---\ntitle: "Letter"\ndocument-type: "other"\n---\n\n'
+
+// [case, body, whether the paragraph scanner renders every directive]
+const BLOCK_END_CASES = [
+  ['blank line after the closer', ':::letterhead\nACME\n:::\n\nDear Sir,\n', true],
+  ['closer at the end of the file', ':::letterhead\nACME\n:::', true],
+  ['heading after the closer', ':::letterhead\nACME\n:::\n# Title\n', true],
+  ['fence after the closer', ':::letterhead\nACME\n:::\n```\ncode\n```\n', true],
+  ['rule after the closer', ':::letterhead\nACME\n:::\n***\n', true],
+  ['heading inside the block before the closer', ':::letterhead\n# ACME\n:::\n', true],
+  [
+    'blank line between a list and the closer',
+    ':::signature-block\n- Jane Doe\n- CEO\n\n:::\n',
+    true,
+  ],
+  [
+    'blank line between a table and the closer',
+    ':::contact-info\n| a |\n| - |\n| 1 |\n\n:::\n',
+    true,
+  ],
+  ['heading after a page break', 'One.\n\n::page-break\n# Two\n', true],
+  ['prose after the closer', ':::letterhead\nACME\n:::\nDear Sir,\n', false],
+  ['prose after a legacy closer', '::letterhead\nACME\n::\nDear Sir,\n', false],
+  ['prose after a page break', 'One.\n\n::page-break\nTwo.\n', false],
+  ['prose after a section break', 'One.\n\n::section-break\nTwo.\n', false],
+  ['prose after a legacy page break', 'One.\n\n::page-break ::\nTwo.\n', false],
+  ['prose after a legacy page-break closer', 'One.\n\n::page-break\n::\nTwo.\n', false],
+  ['setext underline after the closer', ':::letterhead\nACME\n:::\n---\n', false],
+  ['indented line after the closer', ':::letterhead\nACME\n:::\n    more\n', false],
+  ['closer directly after a list item', ':::signature-block\n- Jane Doe\n- CEO\n:::\n', false],
+  ['closer after a lazy list continuation', ':::signature-block\n- Jane Doe\nCEO\n:::\n', false],
+  ['closer directly after a table row', ':::contact-info\n| a |\n| - |\n| 1 |\n:::\n', false],
+  ['closer directly after a blockquote', ':::letterhead\n> ACME\n:::\n', false],
+]
+
+test('a directive that does not end its block is an error exactly where the scanner cannot render it', async () => {
+  for (const [name, body, renders] of BLOCK_END_CASES) {
+    const errors = validateDocument(FRONTMATTER + body).errors.map((e) => e.code)
+    if (renders) {
+      assert.deepEqual(errors, [], `${name}: validator`)
+    } else {
+      assert.ok(errors.includes('DIRECTIVE_NOT_BLOCK_END'), `${name}: validator ${errors}`)
+    }
+    assert.deepEqual(
+      literalDirectiveLines(await run(body)).length === 0,
+      renders,
+      `${name}: scanner`,
+    )
+  }
+})
+
+test('DIRECTIVE_NOT_BLOCK_END says where the blank line goes', () => {
+  const after = validateDocument(`${FRONTMATTER}:::letterhead\nACME\n:::\nDear Sir,\n`).errors[0]
+  assert.equal(after.code, 'DIRECTIVE_NOT_BLOCK_END')
+  assert.equal(after.location.line, 8)
+  assert.match(after.message, /:::letterhead/u)
+  assert.match(after.suggestion, /blank line after/u)
+  const before = validateDocument(`${FRONTMATTER}:::signature-block\n- Jane\n:::\n`).errors[0]
+  assert.equal(before.code, 'DIRECTIVE_NOT_BLOCK_END')
+  assert.equal(before.location.line, 8)
+  assert.match(before.message, /list item/u)
+  assert.match(before.suggestion, /blank line before/u)
 })
