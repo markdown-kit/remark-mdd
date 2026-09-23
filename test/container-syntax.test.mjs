@@ -8,10 +8,10 @@ import { remark } from 'remark'
 import remarkDirective from 'remark-directive'
 import remarkGfm from 'remark-gfm'
 
+import { extractDirectives, validateDirectives, validateDocument } from '../lib/validator.js'
 import remarkMddDocumentStructure, {
   hasDocumentStructure,
 } from '../plugins/remark-mdd-document-structure.js'
-import { extractDirectives, validateDirectives, validateDocument } from '../lib/validator.js'
 
 const fixtures = join(dirname(fileURLToPath(import.meta.url)), 'fixtures')
 
@@ -92,7 +92,13 @@ test('the four examples in canonical syntax validate without errors or legacy wa
 test('canonical and legacy spellings extract the same directives', () => {
   const canonical = extractDirectives(CANONICAL).map((d) => d.type)
   const legacy = extractDirectives(LEGACY).map((d) => d.type)
-  assert.deepEqual(canonical, ['letterhead', 'header', 'page-break', 'section-break', 'signature-block'])
+  assert.deepEqual(canonical, [
+    'letterhead',
+    'header',
+    'page-break',
+    'section-break',
+    'signature-block',
+  ])
   assert.deepEqual(legacy, canonical)
 })
 
@@ -106,7 +112,9 @@ test('legacy spelling is accepted with one LEGACY_DIRECTIVE_SYNTAX warning per d
 })
 
 test('legacy block forms of the self-closing directives swallow their closer', () => {
-  const result = validateDirectives(extractDirectives('::page-break\n::\n\n::: section-break\n:::\n'))
+  const result = validateDirectives(
+    extractDirectives('::page-break\n::\n\n::: section-break\n:::\n'),
+  )
   assert.equal(result.errors.length, 0)
   assert.deepEqual(
     extractDirectives('::page-break\n::\n\n::: section-break\n:::\n').map((d) => d.type),

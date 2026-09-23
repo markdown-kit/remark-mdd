@@ -212,7 +212,10 @@ function processDocumentStructure(tree) {
     }
     if (/^::section-break$/u.test(text) || /^:::\s*section-break(?:\s*:::)?$/u.test(text)) {
       output.push(sectionBreakNode())
-      if (/^:::\s*section-break$/u.test(text) && nodeText(input[index + 1] ?? {}).trim() === ':::') {
+      if (
+        /^:::\s*section-break$/u.test(text) &&
+        nodeText(input[index + 1] ?? {}).trim() === ':::'
+      ) {
         index++
       }
       continue
@@ -287,7 +290,11 @@ export function hasDocumentStructure(tree) {
   let hasStructure = false
   visit(tree, ['paragraph', 'containerDirective', 'leafDirective'], (node) => {
     if (node.type !== 'paragraph') {
-      if (BLOCK_DIRECTIVES.has(node.name) || node.name === 'page-break' || node.name === 'section-break')
+      if (
+        BLOCK_DIRECTIVES.has(node.name) ||
+        node.name === 'page-break' ||
+        node.name === 'section-break'
+      )
         hasStructure = true
       return
     }
