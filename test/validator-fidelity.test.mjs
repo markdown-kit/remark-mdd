@@ -225,3 +225,36 @@ test('@table-N and @figure-N references are checked against tables and images in
   assert.match(broken[0], /@table-2/u)
   assert.match(broken[1], /@figure-3/u)
 })
+
+test('frontmatter values of the wrong type or empty are reported once per field', () => {
+  const errorsFor = (yaml) =>
+    validateDocument(`---\ntitle: "T"\ndocument-type: "other"\n${yaml}\n---\n`).errors.map(
+      (e) => `${e.location?.field} ${e.code}`,
+    )
+  // [frontmatter line, the one error expected]
+  const cases = [
+    ['version: 1.5', 'version INVALID_FIELD_TYPE'],
+    ['version: 1.0', 'version INVALID_FIELD_TYPE'],
+    ['status: 3', 'status INVALID_FIELD_TYPE'],
+    ['language: true', 'language INVALID_FIELD_TYPE'],
+    ['status: ""', 'status INVALID_STATUS'],
+    ['version: ""', 'version INVALID_VERSION_FORMAT'],
+    ['date: ""', 'date INVALID_DATE_FORMAT'],
+    ['total-amount: ""', 'total-amount INVALID_CURRENCY_FORMAT'],
+  ]
+  for (const [yaml, expected] of cases) {
+    assert.deepEqual(errorsFor(yaml), [expected], yaml)
+  }
+  const title = validateDocument(`---\ntitle: 1984\ndocument-type: "other"\n---\n`).errors
+  assert.deepEqual(
+    title.map((e) => e.code),
+    ['INVALID_FIELD_TYPE'],
+  )
+})
+
+test('an unquoted version is reported as a number with a hint to quote it', () => {
+  const error = validateDocument(`---\ntitle: "T"\ndocument-type: "other"\nversion: 1.0\n---\n`)
+    .errors[0]
+  assert.match(error.message, /"version" must be a string \(got number\)/u)
+  assert.match(error.suggestion, /version: "1\.0"/u)
+})
