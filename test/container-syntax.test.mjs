@@ -163,6 +163,35 @@ Hello.
   assert.match(required.message, /:::letterhead/)
 })
 
+test('messages spell a legacy block as written and name its own end marker', () => {
+  const find = (body, code) =>
+    [
+      ...validateDocument(FRONTMATTER + body).errors,
+      ...validateDocument(FRONTMATTER + body).warnings,
+    ].find((e) => e.code === code)
+  const legacy = find('::letterhead\nA\n\n::header\nB\n::\n', 'INVALID_DIRECTIVE_NESTING')
+  assert.equal(
+    legacy.message,
+    'Directive ::header at line 9 starts before ::letterhead was closed; MDD directives cannot be nested',
+  )
+  assert.equal(legacy.suggestion, 'Close ::letterhead with :: before opening ::header')
+  const missing = find('::letterhead\nA\n\n::header\nB\n::\n', 'MISSING_END_MARKER')
+  assert.equal(missing.message, 'Directive ::letterhead at line 6 is missing end marker ::')
+  const mixed = find(':::letterhead\nA\n\n::header\nB\n::\n', 'INVALID_DIRECTIVE_NESTING')
+  assert.equal(mixed.suggestion, 'Close :::letterhead with ::: before opening ::header')
+  const order = find(
+    ':::signature-block\nJ\n:::\n\n:::letterhead\nA\n:::\n',
+    'INVALID_DIRECTIVE_ORDER',
+  )
+  assert.equal(order.message, ':::signature-block at line 6 appears before :::letterhead')
+  const empty = find('::letterhead\n::\n', 'EMPTY_DIRECTIVE')
+  assert.equal(empty.message, 'Directive ::letterhead at line 6 is empty')
+  const start = find('Text\n::header\nB\n::\n', 'DIRECTIVE_NOT_BLOCK_START')
+  assert.match(start.message, /^Directive ::header at line 7 /u)
+  const end = find('::letterhead\nA\n::\nText\n', 'DIRECTIVE_NOT_BLOCK_END')
+  assert.match(end.message, /^End marker :: of ::letterhead at line 8 /u)
+})
+
 test('the structure plugin reads canonical blocks from paragraphs', async () => {
   const tree = await run(CANONICAL)
   assert.deepEqual(containers(tree), [
