@@ -70,9 +70,9 @@
   },
   "devDependencies": {
     "@entro314labs/release-kit": "^3.0.0",
-    "oxfmt": "^0.76.0",
-    "oxlint": "^1.91.0",
-    "oxlint-tsgolint": "^7.0.2005",
+    "oxfmt": "^0.77.0",
+    "oxlint": "^1.92.0",
+    "oxlint-tsgolint": "^7.0.2006",
     "remark": "^15.0.1",
     "remark-directive": "4.0.0",
     "remark-gfm": "^4.0.1"
